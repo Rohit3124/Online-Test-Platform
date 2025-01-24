@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const userRoutes = require("./routes/user.route");
 
 app.use(express.json());
+app.use("/api/user", userRoutes);
 
 mongoose
   .connect("mongodb://localhost/online-test")
