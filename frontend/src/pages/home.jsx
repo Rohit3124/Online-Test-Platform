@@ -1,4 +1,5 @@
 import { useContext, useEffect } from "react";
+
 import { currentUserContext } from "../context/userContext";
 
 const Home = () => {
@@ -18,7 +19,6 @@ const Home = () => {
       localStorage.removeItem("currentUser");
     }
   }, [currentUser]);
-  console.log(currentUser);
   return <div>Home</div>;
 };
 

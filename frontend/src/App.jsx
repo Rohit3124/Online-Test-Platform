@@ -3,6 +3,8 @@ import Home from "./pages/home";
 import SignIn from "./pages/signIn";
 import SignUp from "./pages/signUp";
 import PrivateRoute from "./components/privateRoute";
+import OnlyAdminPrivateRoute from "./components/onlyAdminPrivateRoute";
+import AdminDashboard from "./pages/adminDashboard";
 
 export default function App() {
   return (
@@ -12,6 +14,9 @@ export default function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
+        </Route>
+        <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path="admin-dashboard" element={<AdminDashboard />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

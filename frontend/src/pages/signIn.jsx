@@ -42,7 +42,7 @@ const SignIn = () => {
         return alert("something went wrong");
       }
       setCurrentUser(responseData);
-      navigate("/");
+      responseData.isAdmin ? navigate("/admin-dashboard") : navigate("/");
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
