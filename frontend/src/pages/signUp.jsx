@@ -1,6 +1,59 @@
-import { Button, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Button, Label, TextInput, Spinner } from "flowbite-react";
+import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Joi from "joi";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { currentUserContext } from "../context/userContext";
+
+const schema = Joi.object({
+  username: Joi.string().min(3).max(255).required().empty("").messages({
+    "string.base": "Username must be a text value.",
+    "string.min": "Username must be at least 3 characters long.",
+    "string.max": "Username cannot exceed 255 characters.",
+    "any.required": "Username is required.",
+  }),
+  email: Joi.string().required().empty("").messages({
+    "string.base": "Email must be a text value.",
+    "string.email": "Please enter a valid email address.",
+    "any.required": "Email is required.",
+  }),
+  password: Joi.string().min(6).max(100).required().empty("").messages({
+    "string.base": "Password must be a text value.",
+    "string.min": "Password must be at least 6 characters long.",
+    "string.max": "Password cannot exceed 100 characters.",
+    "any.required": "Password is required.",
+  }),
+});
+
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { setCurrentUser } = useContext(currentUserContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: joiResolver(schema),
+  });
+  const onSubmit = async (data) => {
+    try {
+      const res = await fetch("/api/user/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const responseData = await res.json();
+      if (!res.ok) {
+        return alert("something went wrong");
+      }
+      setCurrentUser(responseData.user);
+      navigate("/");
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      alert(error.message || "Something went wrong. Please try again later.");
+    }
+  };
   return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-4xl mx-auto flex-col md:flex-row md:items-center gap-20">
@@ -19,25 +72,56 @@ const SignUp = () => {
               Sign up with your email, password, or Google account.
             </p>
           </div>
-          <form className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div>
               <Label value="Your username" />
-              <TextInput type="text" placeholder="Username" id="username" />
+              <TextInput
+                type="text"
+                placeholder="Username"
+                {...register("username")}
+              />
             </div>
+            {errors.username && (
+              <p className="text-red-500">{errors.username.message}</p>
+            )}
             <div>
               <Label value="Your email" />
               <TextInput
                 type="email"
                 placeholder="name@company.com"
-                id="email"
+                {...register("email")}
               />
             </div>
+            {errors.email && (
+              <p className="text-red-500">{errors.email.message}</p>
+            )}
             <div>
               <Label value="Your password" />
-              <TextInput type="password" placeholder="Password" id="password" />
+              <TextInput
+                type="password"
+                placeholder="Password"
+                {...register("password")}
+              />
             </div>
-            <Button gradientDuoTone="purpleToPink" type="submit">
-              Sign Up
+            {errors.password && (
+              <p className="text-red-500">{errors.password.message}</p>
+            )}
+            <Button
+              gradientDuoTone="purpleToPink"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
           <div className="flex gap-2 text-sm mt-5">
