@@ -22,7 +22,7 @@ const schema = Joi.object({
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { setCurrentUser } = useContext(currentUserContext);
+  const { currentUser, setCurrentUser } = useContext(currentUserContext);
   const {
     register,
     handleSubmit,
@@ -41,13 +41,14 @@ const SignIn = () => {
       if (!res.ok) {
         return alert("something went wrong");
       }
-      setCurrentUser(responseData.user);
+      setCurrentUser(responseData);
       navigate("/");
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
     }
   };
+
   return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-4xl mx-auto flex-col md:flex-row md:items-center gap-20">
