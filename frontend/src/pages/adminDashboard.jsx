@@ -1,10 +1,9 @@
-import { Sidebar } from "flowbite-react";
-import { HiChartPie, HiTable, HiUser } from "react-icons/hi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import DashSidebar from "../components/dashSidebar";
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState("");
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
@@ -12,6 +11,7 @@ const AdminDashboard = () => {
       setTab(tabFromUrl);
     }
   }, [location.search]);
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="md:w-56 bg">

@@ -40,5 +40,11 @@ router.post("/signup", async (req, res) => {
       .send("An unexpected error occurred. Please try again later.");
   }
 });
-
+router.post("/signout", async (req, res) => {
+  try {
+    res.clearCookie("auth_token").status(200).json("User has been signed out");
+  } catch (error) {
+    res.status(500).send("Something went wrong. Please try again later.");
+  }
+});
 module.exports = router;

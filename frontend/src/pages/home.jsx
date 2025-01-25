@@ -1,5 +1,4 @@
 import { useContext, useEffect } from "react";
-
 import { currentUserContext } from "../context/userContext";
 
 const Home = () => {
