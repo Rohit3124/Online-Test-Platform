@@ -37,7 +37,11 @@ router.post("/create", auth, async (req, res) => {
     await newTest.save();
     res
       .status(200)
-      .json({ message: "Test created successfully", test: newTest });
+      .json({
+        message: "Test created successfully",
+        test: newTest,
+        testId: newTest._id,
+      });
   } catch (err) {
     alert(err.message);
     res.status(500).send("Something went wrong. Please try again later.");

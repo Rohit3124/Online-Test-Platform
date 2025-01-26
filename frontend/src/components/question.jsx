@@ -1,16 +1,10 @@
 import PropTypes from "prop-types";
-import {
-  Button,
-  Label,
-  Modal,
-  TextInput,
-  Datepicker,
-  Textarea,
-} from "flowbite-react";
-import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
+
 const QuestionSchema = Joi.object({
   question: Joi.string().required().messages({
     "string.base": "Question must be a string.",
@@ -39,28 +33,49 @@ const QuestionSchema = Joi.object({
     "number.min": "Negative marks cannot be less than 0.",
   }),
 });
-const Question = ({ openQuestionModal, setOpenQuestionModal }) => {
+
+const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
+  const [questionsCount, setQuestionsCount] = useState(0);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    control,
+    reset,
   } = useForm({
     resolver: joiResolver(QuestionSchema),
   });
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await fetch(`/api/question/getQuestions?testId=${testId}`);
+        if (!res.ok) {
+          return alert("Failed to fetch questions");
+        }
+        const data = await res.json();
+        setQuestionsCount(data.length);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
 
+    fetchQuestions();
+  });
   const onSubmit = async (data) => {
+    const questionData = {
+      ...data,
+      testId,
+    };
     try {
       const res = await fetch("/api/question/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(questionData),
       });
       const responseData = await res.json();
       if (!res.ok) {
         return alert("Something went wrong");
       }
-      setOpenQuestionModal(false);
+      reset();
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
@@ -76,6 +91,7 @@ const Question = ({ openQuestionModal, setOpenQuestionModal }) => {
     >
       <Modal.Header />
       <Modal.Body>
+        <div className="text-2xl mb-3">You have {questionsCount} questions</div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="text-2xl mb-5">Question Details</div>
 
@@ -101,7 +117,10 @@ const Question = ({ openQuestionModal, setOpenQuestionModal }) => {
               rows={2}
               {...register("options", {
                 setValueAs: (value) =>
-                  value.split(",").map((option) => option.trim()),
+                  (value && typeof value === "string"
+                    ? value.split(",")
+                    : []
+                  ).map((option) => option.trim()),
               })}
             />
             {errors.options && (
@@ -118,8 +137,7 @@ const Question = ({ openQuestionModal, setOpenQuestionModal }) => {
               placeholder="Enter the correct option(s), separated by commas"
               {...register("correctOption", {
                 setValueAs: (value) =>
-                  value
-                    .split(",")
+                  (value && typeof value === "string" ? value.split(",") : [])
                     .map((option) => option.trim())
                     .filter((option) => option !== ""),
               })}
@@ -146,9 +164,15 @@ const Question = ({ openQuestionModal, setOpenQuestionModal }) => {
             )}
           </div>
 
-          <div className="flex justify-center mt-5">
+          <div className="flex justify-between mt-5">
             <Button type="submit" className="mr-2">
               Save Question
+            </Button>
+            <Button
+              onClick={() => setOpenQuestionModal(false)}
+              className="bg-gray-500 text-white"
+            >
+              Close
             </Button>
           </div>
         </form>
@@ -159,5 +183,6 @@ const Question = ({ openQuestionModal, setOpenQuestionModal }) => {
 Question.propTypes = {
   openQuestionModal: PropTypes.bool.isRequired,
   setOpenQuestionModal: PropTypes.func.isRequired,
+  testId: PropTypes.string.isRequired,
 };
 export default Question;

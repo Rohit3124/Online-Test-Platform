@@ -34,12 +34,14 @@ const TestSchema = Joi.object({
 const Exam = () => {
   const [openTestModal, setOpenTestModal] = useState(false);
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
+  const [testId, setTestId] = useState("");
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     control,
+    reset,
   } = useForm({
     resolver: joiResolver(TestSchema),
   });
@@ -54,17 +56,19 @@ const Exam = () => {
       ...data,
       testDate: formatDate(data.testDate),
     };
-    console.log(formattedData);
+
     try {
       const res = await fetch("/api/exam/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formattedData),
       });
       const responseData = await res.json();
       if (!res.ok) {
         return alert("something went wrong");
       }
+      setTestId(responseData.testId);
+      reset();
       setOpenTestModal(false);
       setOpenQuestionModal(true);
     } catch (error) {
@@ -165,6 +169,7 @@ const Exam = () => {
       <Question
         openQuestionModal={openQuestionModal}
         setOpenQuestionModal={setOpenQuestionModal}
+        testId={testId}
       />
     </div>
   );
