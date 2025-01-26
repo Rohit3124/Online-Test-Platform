@@ -8,10 +8,10 @@ router.use(express.json());
 
 function validate(req) {
   const schema = Joi.object({
-    testname: Joi.string().required(),
-    testdate: Joi.date().required(),
+    testName: Joi.string().required(),
+    testDate: Joi.date().required(),
     duration: Joi.number().required(),
-    totalmarks: Joi.number().required(),
+    totalMarks: Joi.number().required(),
     questions: Joi.array().required(),
   });
 
@@ -25,12 +25,12 @@ router.post("/create", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { testname, testdate, duration, totalmarks, questions } = req.body;
+  const { testName, testDate, duration, totalMarks, questions } = req.body;
   const newTest = new Test({
-    testname,
-    testdate,
+    testName,
+    testDate,
     duration,
-    totalmarks,
+    totalMarks,
     questions,
   });
   try {

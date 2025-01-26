@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const testSchema = new mongoose.Schema(
   {
-    testname: {
+    testName: {
       type: String,
       required: true,
       trim: true,
     },
-    testdate: {
+    testDate: {
       type: Date,
       required: true,
     },
@@ -15,7 +15,7 @@ const testSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    totalmarks: {
+    totalMarks: {
       type: Number,
       required: true,
     },
