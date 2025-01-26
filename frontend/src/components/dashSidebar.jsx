@@ -1,5 +1,6 @@
 import { Sidebar } from "flowbite-react";
-import { HiArrowSmRight, HiOutlineUserGroup } from "react-icons/hi";
+import { HiArrowSmRight } from "react-icons/hi";
+import { PiStudent, PiExam } from "react-icons/pi";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 const DashSidebar = () => {
@@ -30,12 +31,13 @@ const DashSidebar = () => {
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
           <Link to="/dashboard?tab=users">
-            <Sidebar.Item
-              active={tab === "students"}
-              icon={HiOutlineUserGroup}
-              as="div"
-            >
+            <Sidebar.Item active={tab === "students"} icon={PiStudent} as="div">
               Students
+            </Sidebar.Item>
+          </Link>
+          <Link to="/dashboard?tab=exam">
+            <Sidebar.Item active={tab === "exam"} icon={PiExam} as="div">
+              Exams
             </Sidebar.Item>
           </Link>
 
