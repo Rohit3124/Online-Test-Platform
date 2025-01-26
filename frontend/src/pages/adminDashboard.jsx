@@ -1,7 +1,11 @@
 import { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import DashSidebar from "../components/dashSidebar";
+import Exam from "../components/exam";
+import Students from "../components/students";
 
 const AdminDashboard = () => {
+  const location = useLocation();
   const [tab, setTab] = useState("");
 
   useEffect(() => {
@@ -17,6 +21,8 @@ const AdminDashboard = () => {
       <div className="md:w-56 bg">
         <DashSidebar />
       </div>
+      {tab === "students" && <Students />}
+      {tab === "exam" && <Exam />}
     </div>
   );
 };

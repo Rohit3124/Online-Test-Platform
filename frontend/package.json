@@ -10,7 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^3.10.0",
+    "@mui/material": "^6.4.1",
+    "@mui/x-date-pickers": "^7.24.1",
+    "dayjs": "^1.11.13",
     "flowbite-react": "^0.10.2",
     "joi": "^17.13.3",
     "react": "^18.3.1",

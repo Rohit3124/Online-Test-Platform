@@ -30,12 +30,12 @@ const DashSidebar = () => {
     <Sidebar className="w-full md:w-56 ">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
-          <Link to="/dashboard?tab=users">
+          <Link to="/admin-dashboard?tab=students">
             <Sidebar.Item active={tab === "students"} icon={PiStudent} as="div">
               Students
             </Sidebar.Item>
           </Link>
-          <Link to="/dashboard?tab=exam">
+          <Link to="/admin-dashboard?tab=exam">
             <Sidebar.Item active={tab === "exam"} icon={PiExam} as="div">
               Exams
             </Sidebar.Item>

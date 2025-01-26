@@ -10,9 +10,9 @@ function validate(req) {
   const schema = Joi.object({
     testName: Joi.string().required(),
     testDate: Joi.date().required(),
-    duration: Joi.number().required(),
+    startTime: Joi.string().required(),
+    endTime: Joi.string().required(),
     totalMarks: Joi.number().required(),
-    questions: Joi.array().required(),
   });
 
   return schema.validate(req);
@@ -25,13 +25,13 @@ router.post("/create", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { testName, testDate, duration, totalMarks, questions } = req.body;
+  const { testName, testDate, startTime, endTime, totalMarks } = req.body;
   const newTest = new Test({
     testName,
     testDate,
-    duration,
+    startTime,
+    endTime,
     totalMarks,
-    questions,
   });
   try {
     await newTest.save();

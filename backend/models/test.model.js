@@ -11,16 +11,16 @@ const testSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    duration: {
-      type: Number,
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
+      type: String,
       required: true,
     },
     totalMarks: {
       type: Number,
-      required: true,
-    },
-    questions: {
-      type: Array,
       required: true,
     },
   },
