@@ -12,7 +12,7 @@ const questionSchema = new mongoose.Schema(
       required: true,
     },
     correctOption: {
-      type: [Number],
+      type: [String],
       required: true,
     },
     negativeMarks: {

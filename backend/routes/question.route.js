@@ -10,7 +10,7 @@ function validate(req) {
   const schema = Joi.object({
     question: Joi.string().required(),
     options: Joi.array().items(Joi.string()).length(4).required(),
-    correctOption: Joi.array().items(Joi.number().min(1).max(4)).required(),
+    correctOption: Joi.array().items(Joi.string()).required(),
     negativeMarks: Joi.number().min(0).optional(),
   });
 

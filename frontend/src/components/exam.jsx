@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
+import Question from "./question";
 
-const schema = Joi.object({
+const TestSchema = Joi.object({
   testName: Joi.string().required().messages({
     "string.base": "Test Name must be a string.",
     "string.empty": "Test Name is required.",
@@ -31,14 +32,16 @@ const schema = Joi.object({
 });
 
 const Exam = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [openTestModal, setOpenTestModal] = useState(false);
+  const [openQuestionModal, setOpenQuestionModal] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     control,
   } = useForm({
-    resolver: joiResolver(schema),
+    resolver: joiResolver(TestSchema),
   });
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -62,6 +65,8 @@ const Exam = () => {
       if (!res.ok) {
         return alert("something went wrong");
       }
+      setOpenTestModal(false);
+      setOpenQuestionModal(true);
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
@@ -70,12 +75,12 @@ const Exam = () => {
 
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
-      <Button onClick={() => setOpenModal(true)}>Add Exam</Button>
+      <Button onClick={() => setOpenTestModal(true)}>Add Exam</Button>
       <Modal
-        show={openModal}
+        show={openTestModal}
         size="xl"
         popup
-        onClose={() => setOpenModal(false)}
+        onClose={() => setOpenTestModal(false)}
       >
         <Modal.Header />
         <Modal.Body>
@@ -157,6 +162,10 @@ const Exam = () => {
           </form>
         </Modal.Body>
       </Modal>
+      <Question
+        openQuestionModal={openQuestionModal}
+        setOpenQuestionModal={setOpenQuestionModal}
+      />
     </div>
   );
 };
