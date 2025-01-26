@@ -35,17 +35,24 @@ router.post("/create", auth, async (req, res) => {
   });
   try {
     await newTest.save();
-    res
-      .status(200)
-      .json({
-        message: "Test created successfully",
-        test: newTest,
-        testId: newTest._id,
-      });
+    res.status(200).json({
+      message: "Test created successfully",
+      test: newTest,
+      testId: newTest._id,
+    });
   } catch (err) {
     alert(err.message);
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+router.get("/getTests", auth, async (req, res) => {
+  try {
+    const questions = await Test.find();
 
+    return res.status(200).json(questions);
+  } catch (error) {
+    console.error("Error fetching tests:", error);
+    return res.status(500).json({ message: "Failed to fetch tests." });
+  }
+});
 module.exports = router;
