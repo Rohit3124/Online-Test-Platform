@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
 const testRoutes = require("./routes/test.route");
+const questionRoutes = require("./routes/question.route");
 
 if (!config.get("jwtSecretKey")) {
   throw new Error("FATAL ERROR: jwtSecretKey is not defined");
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/exam", testRoutes);
+app.use("/api/question", questionRoutes);
 
 mongoose
   .connect("mongodb://localhost/online-test")
