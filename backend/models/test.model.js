@@ -7,16 +7,16 @@ const testSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    testdate: {
+      type: Date,
+      required: true,
+    },
     duration: {
       type: Number,
       required: true,
     },
     totalmarks: {
       type: Number,
-      required: true,
-    },
-    examdate: {
-      type: Date,
       required: true,
     },
     questions: {
