@@ -41,8 +41,10 @@ const TestSchema = Joi.object({
 const Exam = () => {
   const [openTestModal, setOpenTestModal] = useState(false);
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
+  const [viewExamModal, setViewExamModal] = useState(false);
   const [testId, setTestId] = useState("");
   const [exams, setExams] = useState([]);
+  const [testQuestions, setTestQuestions] = useState([]);
 
   const {
     register,
@@ -74,7 +76,7 @@ const Exam = () => {
     };
 
     fetchExams();
-  });
+  }, []);
 
   const onSubmit = async (data) => {
     const formattedData = {
@@ -99,6 +101,20 @@ const Exam = () => {
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
+    }
+  };
+  const handleViewExam = async (testId) => {
+    setViewExamModal(true);
+    try {
+      const response = await fetch(
+        `/api/question/getQuestions?testId=${testId}`
+      );
+      if (!response.ok) alert("Failed to fetch questions");
+      const questions = await response.json();
+
+      setTestQuestions(questions);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
     }
   };
 
@@ -226,7 +242,12 @@ const Exam = () => {
                     </Table.Cell>
                     <Table.Cell>{exam.startTime}</Table.Cell>
                     <Table.Cell>
-                      <Button gradientMonochrome="info">View</Button>
+                      <Button
+                        gradientMonochrome="info"
+                        onClick={() => handleViewExam(exam._id)}
+                      >
+                        View
+                      </Button>
                     </Table.Cell>
                     <Table.Cell>
                       <Link className="text-teal-500 hover:underline" to={""}>
@@ -247,6 +268,58 @@ const Exam = () => {
           <div className="text-2xl">No exams available</div>
         )}
       </div>
+      <Modal
+        show={viewExamModal}
+        size="xl"
+        popup
+        onClose={() => setViewExamModal(false)}
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-xl my-3">
+            You have {testQuestions.length} questions.
+          </div>
+          {testQuestions.length > 0 && (
+            <div className="overflow-x-auto">
+              <Table hoverable className="shadow-md">
+                <Table.Head>
+                  <Table.HeadCell>Question No.</Table.HeadCell>
+                  <Table.HeadCell className="flex justify-center items-center">
+                    View Question
+                  </Table.HeadCell>
+                  <Table.HeadCell>Edit</Table.HeadCell>
+                  <Table.HeadCell>Delete</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                  {testQuestions.map((question, index) => (
+                    <Table.Row
+                      key={index}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <Table.Cell className="text-center">
+                        {index + 1}
+                      </Table.Cell>
+                      <Table.Cell className="flex justify-center items-center">
+                        <Button gradientMonochrome="info">View</Button>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link className="text-teal-500 hover:underline" to={""}>
+                          <span>Edit</span>
+                        </Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span className="font-medium text-red-500 hover:underline cursor-pointer">
+                          Delete
+                        </span>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
+          )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
