@@ -45,14 +45,14 @@ router.post("/create", auth, async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
-router.get("/getTests", auth, async (req, res) => {
+router.get("/getExams", auth, async (req, res) => {
   try {
     const questions = await Test.find();
 
     return res.status(200).json(questions);
   } catch (error) {
-    console.error("Error fetching tests:", error);
-    return res.status(500).json({ message: "Failed to fetch tests." });
+    console.error("Error fetching exams:", error);
+    return res.status(500).json({ message: "Failed to fetch exams." });
   }
 });
 module.exports = router;
