@@ -250,58 +250,6 @@ const Exam = () => {
           <div className="text-2xl">No exams available</div>
         )}
       </div>
-      {/* <Modal
-        show={viewExamModal}
-        size="xl"
-        popup
-        onClose={() => setViewExamModal(false)}
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-xl my-3">
-            You have {testQuestions.length} questions.
-          </div>
-          {testQuestions.length > 0 && (
-            <div className="overflow-x-auto">
-              <Table hoverable className="shadow-md">
-                <Table.Head>
-                  <Table.HeadCell>Question No.</Table.HeadCell>
-                  <Table.HeadCell className="flex justify-center items-center">
-                    View Question
-                  </Table.HeadCell>
-                  <Table.HeadCell>Edit</Table.HeadCell>
-                  <Table.HeadCell>Delete</Table.HeadCell>
-                </Table.Head>
-                <Table.Body className="divide-y">
-                  {testQuestions.map((question, index) => (
-                    <Table.Row
-                      key={index}
-                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <Table.Cell className="text-center">
-                        {index + 1}
-                      </Table.Cell>
-                      <Table.Cell className="flex justify-center items-center">
-                        <Button gradientMonochrome="info">View</Button>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Link className="text-teal-500 hover:underline" to={""}>
-                          <span>Edit</span>
-                        </Link>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <span className="font-medium text-red-500 hover:underline cursor-pointer">
-                          Delete
-                        </span>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
-            </div>
-          )}
-        </Modal.Body>
-      </Modal> */}
     </div>
   );
 };

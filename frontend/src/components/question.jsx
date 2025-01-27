@@ -17,7 +17,7 @@ const QuestionComponent = ({ questionDetails, disableOptions }) => {
               name={questionDetails._id}
               value={option}
               disabled={disableOptions}
-              defaultChecked={correctOption.includes(option)}
+              defaultChecked={correctOption.includes((i + 1).toString())}
             />
             <Label htmlFor={`${questionDetails._id}-${i}`}>{option}</Label>
           </div>
