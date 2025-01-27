@@ -12,6 +12,7 @@ import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Question from "./createQuestions";
 import { Link } from "react-router-dom";
+import EditExamModal from "./editExamModal";
 
 const TestSchema = Joi.object({
   testName: Joi.string().required().messages({
@@ -42,6 +43,8 @@ const TestSchema = Joi.object({
 const Exam = () => {
   const [openTestModal, setOpenTestModal] = useState(false);
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
+  const [openEditTestModal, setOpenEditTestModal] = useState(false);
+  const [selectedTest, setSelectedTest] = useState(null);
   const [testId, setTestId] = useState("");
   const [exams, setExams] = useState([]);
 
@@ -75,7 +78,7 @@ const Exam = () => {
     };
 
     fetchExams();
-  }, []);
+  }, [openEditTestModal]);
 
   const onSubmit = async (data) => {
     const formattedData = {
@@ -233,7 +236,14 @@ const Exam = () => {
                     </Table.Cell>
                     <Table.Cell>
                       <Link className="text-teal-500 hover:underline" to={""}>
-                        <span>Edit</span>
+                        <span
+                          onClick={() => {
+                            setSelectedTest(exam);
+                            setOpenEditTestModal(true);
+                          }}
+                        >
+                          Edit
+                        </span>
                       </Link>
                     </Table.Cell>
                     <Table.Cell>
@@ -250,6 +260,11 @@ const Exam = () => {
           <div className="text-2xl">No exams available</div>
         )}
       </div>
+      <EditExamModal
+        openEditTestModal={openEditTestModal}
+        setOpenEditTestModal={setOpenEditTestModal}
+        test={selectedTest}
+      />
     </div>
   );
 };

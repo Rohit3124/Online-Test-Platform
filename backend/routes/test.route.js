@@ -55,4 +55,25 @@ router.get("/getExams", auth, async (req, res) => {
     return res.status(500).json({ message: "Failed to fetch exams." });
   }
 });
+router.put("/updateExam/:id", auth, async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(400).send("You are not allowed to update this question");
+  }
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const { testName, testDate, startTime, endTime, totalMarks } = req.body;
+  try {
+    const updatedExam = await Test.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: { testName, testDate, startTime, endTime, totalMarks },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedExam);
+  } catch (error) {
+    alert(error.message);
+  }
+});
 module.exports = router;
