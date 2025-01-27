@@ -5,6 +5,7 @@ import { Modal, Label, TextInput, Textarea, Button } from "flowbite-react";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useForm } from "react-hook-form";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const QuestionSchema = Joi.object({
   question: Joi.string().required().messages({
@@ -38,6 +39,7 @@ const QuestionSchema = Joi.object({
 const ExamDetails = () => {
   const [questions, setQuestions] = useState([]);
   const [openEditQuestionModal, setOpenEditQuestionModal] = useState(false);
+  const [openDeleteQuestionModal, setOpenDeleteQuestionModal] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const { testId } = useParams();
   const navigate = useNavigate();
@@ -68,7 +70,7 @@ const ExamDetails = () => {
     };
 
     fetchQuestions();
-  }, [testId, openEditQuestionModal]);
+  }, [testId, openEditQuestionModal, openDeleteQuestionModal]);
 
   const openEditModal = (question) => {
     setSelectedQuestion(question);
@@ -79,6 +81,10 @@ const ExamDetails = () => {
       negativeMarks: question.negativeMarks || 0,
     });
     setOpenEditQuestionModal(true);
+  };
+  const OpenDeleteModal = (question) => {
+    setSelectedQuestion(question);
+    setOpenDeleteQuestionModal(true);
   };
   const onSubmit = async (data) => {
     setOpenEditQuestionModal(false);
@@ -99,6 +105,21 @@ const ExamDetails = () => {
       console.log(responseData);
     } catch (error) {
       console.error("Error during update", error);
+      alert(error.message || "Something went wrong. Please try again later.");
+    }
+  };
+  const handleDeleteQuestion = async () => {
+    setOpenDeleteQuestionModal(false);
+    try {
+      const res = await fetch(
+        `/api/question/deleteQuestion/${selectedQuestion._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const responseData = await res.json();
+    } catch (error) {
+      console.log(error);
       alert(error.message || "Something went wrong. Please try again later.");
     }
   };
@@ -133,7 +154,10 @@ const ExamDetails = () => {
                   >
                     Edit
                   </span>
-                  <span className="font-medium text-red-500 hover:underline cursor-pointer">
+                  <span
+                    className="font-medium text-red-500 hover:underline cursor-pointer"
+                    onClick={() => OpenDeleteModal(question)}
+                  >
                     Delete
                   </span>
                 </div>
@@ -231,6 +255,33 @@ const ExamDetails = () => {
               </Button>
             </div>
           </form>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={openDeleteQuestionModal}
+        size="md"
+        onClose={() => setOpenDeleteQuestionModal(false)}
+        popup
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this question?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteQuestion}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button
+                color="gray"
+                onClick={() => setOpenDeleteQuestionModal(false)}
+              >
+                No, cancel
+              </Button>
+            </div>
+          </div>
         </Modal.Body>
       </Modal>
     </>

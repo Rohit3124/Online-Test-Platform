@@ -59,7 +59,7 @@ router.get("/getQuestions", auth, async (req, res) => {
 });
 router.put("/updateQuestion/:id", auth, async (req, res) => {
   if (!req.user.isAdmin) {
-    return res.status(400).send("You are not allowed to update a question");
+    return res.status(400).send("You are not allowed to update this question");
   }
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -73,6 +73,17 @@ router.put("/updateQuestion/:id", auth, async (req, res) => {
       { new: true }
     );
     res.status(200).json(updatedQuestion);
+  } catch (error) {
+    alert(error.message);
+  }
+});
+router.delete("/deleteQuestion/:id", auth, async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(400).send("You are not allowed to delete this question");
+  }
+  try {
+    await Question.findByIdAndDelete(req.params.id);
+    res.status(200).json("Question has been deleted");
   } catch (error) {
     alert(error.message);
   }
