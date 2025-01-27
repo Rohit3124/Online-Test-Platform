@@ -13,6 +13,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import Question from "./createQuestions";
 import { Link } from "react-router-dom";
 import EditExamModal from "./editExamModal";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const TestSchema = Joi.object({
   testName: Joi.string().required().messages({
@@ -45,6 +46,7 @@ const Exam = () => {
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
   const [openEditTestModal, setOpenEditTestModal] = useState(false);
   const [selectedTest, setSelectedTest] = useState(null);
+  const [openDeleteTestModa, setOpenDeleteTestModal] = useState(false);
   const [testId, setTestId] = useState("");
   const [exams, setExams] = useState([]);
 
@@ -78,7 +80,7 @@ const Exam = () => {
     };
 
     fetchExams();
-  }, [openEditTestModal]);
+  }, [openEditTestModal, openDeleteTestModa, openTestModal]);
 
   const onSubmit = async (data) => {
     const formattedData = {
@@ -105,7 +107,22 @@ const Exam = () => {
       alert(error.message || "Something went wrong. Please try again later.");
     }
   };
-
+  const handleDeleteModal = (exam) => {
+    setOpenDeleteTestModal(true);
+    setSelectedTest(exam);
+  };
+  const handleDeleteTest = async () => {
+    setOpenDeleteTestModal(false);
+    try {
+      const res = await fetch(`/api/exam/deleteExam/${selectedTest._id}`, {
+        method: "DELETE",
+      });
+      const responseData = await res.json();
+    } catch (error) {
+      console.log(error);
+      alert(error.message || "Something went wrong. Please try again later.");
+    }
+  };
   return (
     <div className="w-full">
       <div className="py-3">
@@ -247,7 +264,10 @@ const Exam = () => {
                       </Link>
                     </Table.Cell>
                     <Table.Cell>
-                      <span className="font-medium text-red-500 hover:underline cursor-pointer">
+                      <span
+                        className="font-medium text-red-500 hover:underline cursor-pointer"
+                        onClick={() => handleDeleteModal(exam)}
+                      >
                         Delete
                       </span>
                     </Table.Cell>
@@ -265,6 +285,33 @@ const Exam = () => {
         setOpenEditTestModal={setOpenEditTestModal}
         test={selectedTest}
       />
+      <Modal
+        show={openDeleteTestModa}
+        size="md"
+        onClose={() => setOpenDeleteTestModal(false)}
+        popup
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this exam?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteTest}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button
+                color="gray"
+                onClick={() => setOpenDeleteTestModal(false)}
+              >
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

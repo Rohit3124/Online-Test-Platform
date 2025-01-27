@@ -1,4 +1,4 @@
-import { Label, Radio } from "flowbite-react";
+import { Label, Checkbox } from "flowbite-react";
 import PropTypes from "prop-types";
 
 const QuestionComponent = ({ questionDetails, disableOptions }) => {
@@ -12,7 +12,7 @@ const QuestionComponent = ({ questionDetails, disableOptions }) => {
         </legend>
         {options.map((option, i) => (
           <div key={i} className="flex items-center gap-2">
-            <Radio
+            <Checkbox
               id={`${questionDetails._id}-${i}`}
               name={questionDetails._id}
               value={option}

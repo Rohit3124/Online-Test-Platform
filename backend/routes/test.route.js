@@ -76,4 +76,16 @@ router.put("/updateExam/:id", auth, async (req, res) => {
     alert(error.message);
   }
 });
+router.delete("/deleteExam/:id", auth, async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(400).send("You are not allowed to delete this exam");
+  }
+  try {
+    await Test.findByIdAndDelete(req.params.id);
+    res.status(200).json("Exam has been deleted");
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
 module.exports = router;
