@@ -1,9 +1,12 @@
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
 import { PiStudent, PiExam } from "react-icons/pi";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-const DashSidebar = () => {
+import { useState, useEffect, useContext } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { currentUserContext } from "../context/userContext";
+const StudentDashSidebar = () => {
+  const { setCurrentUser } = useContext(currentUserContext);
+  const location = useLocation();
   const navigate = useNavigate();
   const [tab, setTab] = useState("");
   useEffect(() => {
@@ -20,7 +23,8 @@ const DashSidebar = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        navigate("/");
+        navigate("/sign-in");
+        setCurrentUser(null);
       }
     } catch (error) {
       console.log(error.message);
@@ -30,17 +34,16 @@ const DashSidebar = () => {
     <Sidebar className="w-full md:w-56 ">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
-          <Link to="/admin-dashboard?tab=students">
-            <Sidebar.Item active={tab === "students"} icon={PiStudent} as="div">
-              Students
-            </Sidebar.Item>
-          </Link>
-          <Link to="/admin-dashboard?tab=exam">
-            <Sidebar.Item active={tab === "exam"} icon={PiExam} as="div">
+          <Link to="/student?tab=exams">
+            <Sidebar.Item active={tab === "exams"} icon={PiExam} as="div">
               Exams
             </Sidebar.Item>
           </Link>
-
+          <Link to="/student?tab=results">
+            <Sidebar.Item active={tab === "results"} icon={PiStudent} as="div">
+              Results
+            </Sidebar.Item>
+          </Link>
           <Sidebar.Item
             icon={HiArrowSmRight}
             className="cursor-pointer"
@@ -54,4 +57,4 @@ const DashSidebar = () => {
   );
 };
 
-export default DashSidebar;
+export default StudentDashSidebar;

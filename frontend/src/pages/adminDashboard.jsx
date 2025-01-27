@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import DashSidebar from "../components/dashSidebar";
+import DashSidebar from "../components/adminDashSidebar";
 import Exam from "../components/exam";
 import Students from "../components/students";
 

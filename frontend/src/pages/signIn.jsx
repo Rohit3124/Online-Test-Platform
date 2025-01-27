@@ -30,6 +30,7 @@ const SignIn = () => {
   } = useForm({
     resolver: joiResolver(schema),
   });
+
   const onSubmit = async (data) => {
     try {
       const res = await fetch("/api/auth/signin", {
@@ -42,7 +43,9 @@ const SignIn = () => {
         return alert("something went wrong");
       }
       setCurrentUser(responseData);
-      responseData.isAdmin ? navigate("/admin-dashboard") : navigate("/");
+      responseData.isAdmin
+        ? navigate("/admin-dashboard")
+        : navigate("/student");
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
@@ -61,7 +64,7 @@ const SignIn = () => {
         <div className="flex-1 ">
           <div className="text-center">
             <span className="px-2 py-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-transparent bg-clip-text  text-3xl">
-              JEE/NEET Test Plateform
+              JEE/NEET Test Platform
             </span>
             <p className="text-lg mt-5  mb-8 font-normal">
               Sign in with your email, password, or Google account.
