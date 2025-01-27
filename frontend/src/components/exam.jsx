@@ -10,8 +10,9 @@ import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
-import Question from "./question";
+import Question from "./createQuestions";
 import { Link } from "react-router-dom";
+
 const TestSchema = Joi.object({
   testName: Joi.string().required().messages({
     "string.base": "Test Name must be a string.",
@@ -41,10 +42,8 @@ const TestSchema = Joi.object({
 const Exam = () => {
   const [openTestModal, setOpenTestModal] = useState(false);
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
-  const [viewExamModal, setViewExamModal] = useState(false);
   const [testId, setTestId] = useState("");
   const [exams, setExams] = useState([]);
-  const [testQuestions, setTestQuestions] = useState([]);
 
   const {
     register,
@@ -101,20 +100,6 @@ const Exam = () => {
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");
-    }
-  };
-  const handleViewExam = async (testId) => {
-    setViewExamModal(true);
-    try {
-      const response = await fetch(
-        `/api/question/getQuestions?testId=${testId}`
-      );
-      if (!response.ok) alert("Failed to fetch questions");
-      const questions = await response.json();
-
-      setTestQuestions(questions);
-    } catch (error) {
-      console.error("Error fetching questions:", error);
     }
   };
 
@@ -242,12 +227,9 @@ const Exam = () => {
                     </Table.Cell>
                     <Table.Cell>{exam.startTime}</Table.Cell>
                     <Table.Cell>
-                      <Button
-                        gradientMonochrome="info"
-                        onClick={() => handleViewExam(exam._id)}
-                      >
-                        View
-                      </Button>
+                      <Link to={`/admin-dashboard/exam/${exam._id}`}>
+                        <Button gradientMonochrome="info">View</Button>
+                      </Link>
                     </Table.Cell>
                     <Table.Cell>
                       <Link className="text-teal-500 hover:underline" to={""}>
@@ -268,7 +250,7 @@ const Exam = () => {
           <div className="text-2xl">No exams available</div>
         )}
       </div>
-      <Modal
+      {/* <Modal
         show={viewExamModal}
         size="xl"
         popup
@@ -319,7 +301,7 @@ const Exam = () => {
             </div>
           )}
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
