@@ -1,4 +1,11 @@
-import { Button, Label, Modal, TextInput, Datepicker } from "flowbite-react";
+import {
+  Button,
+  Label,
+  Modal,
+  TextInput,
+  Datepicker,
+  Textarea,
+} from "flowbite-react";
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Joi from "joi";
@@ -40,6 +47,14 @@ const TestSchema = Joi.object({
     "number.base": "Total Marks must be a number.",
     "any.required": "Total Marks is required.",
   }),
+  subject: Joi.array().items(Joi.string().required()).required().messages({
+    "array.base": "Subject must be an array of strings.",
+    "any.required": "Subject is required.",
+  }),
+  syllabus: Joi.string().required().messages({
+    "string.base": "Syllabus must be a string.",
+    "any.required": "Syllabus is required.",
+  }),
 });
 
 const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
@@ -61,6 +76,8 @@ const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
         totalMarks: test.totalMarks,
         startTime: test.startTime,
         endTime: test.endTime,
+        subject: test.subject,
+        syllabus: test.syllabus,
       });
     }
   }, [openEditTestModal, test, reset]);
@@ -100,6 +117,38 @@ const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
               {errors.testName && (
                 <span className="text-red-500 text-sm">
                   {errors.testName.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <Label value="Subject" />
+              <TextInput
+                type="text"
+                placeholder="Enter subjects separated by commas"
+                {...register("subject", {
+                  setValueAs: (value) =>
+                    (value && typeof value === "string"
+                      ? value.split(",")
+                      : []
+                    ).map((subject) => subject.trim()),
+                })}
+              />
+              {errors.subject && (
+                <span className="text-red-500 text-sm">
+                  {errors.subject.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <Label value="Syllabus" />
+              <Textarea
+                type="text"
+                placeholder="Enter syllabus"
+                {...register("syllabus")}
+              />
+              {errors.syllabus && (
+                <span className="text-red-500 text-sm">
+                  {errors.syllabus.message}
                 </span>
               )}
             </div>
@@ -152,6 +201,7 @@ const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
               </div>
             </div>
           </div>
+
           <div className="flex justify-center mt-5">
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Save Changes"}
@@ -162,6 +212,7 @@ const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
     </Modal>
   );
 };
+
 EditExamModal.propTypes = {
   openEditTestModal: PropTypes.bool.isRequired,
   setOpenEditTestModal: PropTypes.func.isRequired,
@@ -172,6 +223,8 @@ EditExamModal.propTypes = {
     totalMarks: PropTypes.number.isRequired,
     startTime: PropTypes.string.isRequired,
     endTime: PropTypes.string.isRequired,
+    subject: PropTypes.arrayOf(PropTypes.string).isRequired,
+    syllabus: PropTypes.string.isRequired,
   }),
 };
 

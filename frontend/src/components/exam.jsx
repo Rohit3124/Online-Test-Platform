@@ -5,6 +5,7 @@ import {
   TextInput,
   Datepicker,
   Table,
+  Textarea,
 } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -48,6 +49,14 @@ const TestSchema = Joi.object({
   totalMarks: Joi.number().required().messages({
     "number.base": "Total Marks must be a number.",
     "any.required": "Total Marks is required.",
+  }),
+  subject: Joi.array().items(Joi.string().required()).required().messages({
+    "array.base": "Subject must be an array of strings.",
+    "any.required": "Subject is required.",
+  }),
+  syllabus: Joi.string().required().messages({
+    "string.base": "Syllabus must be a string.",
+    "any.required": "Syllabus is required.",
   }),
 });
 
@@ -157,6 +166,38 @@ const Exam = () => {
                   {errors.testName && (
                     <span className="text-red-500 text-sm">
                       {errors.testName.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Label value="Subject" />
+                  <TextInput
+                    type="text"
+                    placeholder="Enter subjects separated by commas"
+                    {...register("subject", {
+                      setValueAs: (value) =>
+                        (value && typeof value === "string"
+                          ? value.split(",")
+                          : []
+                        ).map((subject) => subject.trim()),
+                    })}
+                  />
+                  {errors.subject && (
+                    <span className="text-red-500 text-sm">
+                      {errors.subject.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Label value="Syllabus" />
+                  <Textarea
+                    type="text"
+                    placeholder="Enter syllabus"
+                    {...register("syllabus")}
+                  />
+                  {errors.syllabus && (
+                    <span className="text-red-500 text-sm">
+                      {errors.syllabus.message}
                     </span>
                   )}
                 </div>

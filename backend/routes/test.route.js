@@ -17,6 +17,8 @@ function validate(req) {
       .required()
       .pattern(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/),
     totalMarks: Joi.number().required(),
+    subject: Joi.array().items(Joi.string().required()).required(),
+    syllabus: Joi.string().required(),
   });
 
   return schema.validate(req);
@@ -24,19 +26,32 @@ function validate(req) {
 
 router.post("/create", auth, async (req, res) => {
   if (!req.user.isAdmin) {
-    return res.status(400).send("You are not allowed to create a post");
+    return res.status(400).send("You are not allowed to create a test");
   }
+
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { testName, testDate, startTime, endTime, totalMarks } = req.body;
+  const {
+    testName,
+    testDate,
+    startTime,
+    endTime,
+    totalMarks,
+    subject,
+    syllabus,
+  } = req.body;
+
   const newTest = new Test({
     testName,
     testDate,
     startTime,
     endTime,
     totalMarks,
+    subject,
+    syllabus,
   });
+
   try {
     await newTest.save();
     res.status(200).json({
@@ -45,50 +60,73 @@ router.post("/create", auth, async (req, res) => {
       testId: newTest._id,
     });
   } catch (err) {
-    alert(err.message);
+    console.error(err.message);
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+
 router.get("/getExams", auth, async (req, res) => {
   try {
-    const questions = await Test.find();
-
-    return res.status(200).json(questions);
+    const exams = await Test.find();
+    return res.status(200).json(exams);
   } catch (error) {
     console.error("Error fetching exams:", error);
     return res.status(500).json({ message: "Failed to fetch exams." });
   }
 });
+
 router.put("/updateExam/:id", auth, async (req, res) => {
   if (!req.user.isAdmin) {
-    return res.status(400).send("You are not allowed to update this question");
+    return res.status(400).send("You are not allowed to update this test");
   }
+
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { testName, testDate, startTime, endTime, totalMarks } = req.body;
+  const {
+    testName,
+    testDate,
+    startTime,
+    endTime,
+    totalMarks,
+    subject,
+    syllabus,
+  } = req.body;
+
   try {
-    const updatedExam = await Test.findByIdAndUpdate(
+    const updatedTest = await Test.findByIdAndUpdate(
       req.params.id,
       {
-        $set: { testName, testDate, startTime, endTime, totalMarks },
+        $set: {
+          testName,
+          testDate,
+          startTime,
+          endTime,
+          totalMarks,
+          subject,
+          syllabus,
+        },
       },
       { new: true }
     );
-    res.status(200).json(updatedExam);
+
+    res.status(200).json(updatedTest);
   } catch (error) {
-    alert(error.message);
+    console.error(error.message);
+    res.status(500).send("Error updating the test.");
   }
 });
+
 router.delete("/deleteExam/:id", auth, async (req, res) => {
   if (!req.user.isAdmin) {
-    return res.status(400).send("You are not allowed to delete this exam");
+    return res.status(400).send("You are not allowed to delete this test");
   }
   try {
     await Test.findByIdAndDelete(req.params.id);
-    res.status(200).json("Exam has been deleted");
+    res.status(200).json("Test has been deleted");
   } catch (error) {
-    alert(error.message);
+    console.error(error.message);
+    res.status(500).send("Error deleting the test.");
   }
 });
 
