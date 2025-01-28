@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import QuestionComponent from "../components/question";
 
 const QuestionPaper = () => {
   const { testId } = useParams();
@@ -24,7 +25,21 @@ const QuestionPaper = () => {
     fetchQuestions();
   }, [testId]);
   console.log(questions);
-  return <div>questionPaper</div>;
+  return (
+    <div className="flex flex-col gap-6">
+      {questions.map((question, index) => (
+        <div
+          key={question._id}
+          className="flex flex-col items-center justify-center border p-4 rounded-lg"
+        >
+          <QuestionComponent
+            questionDetails={{ ...question, index }}
+            disableOptions={false}
+          />
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default QuestionPaper;
