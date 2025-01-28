@@ -3,6 +3,7 @@ const router = express.Router();
 const Joi = require("joi");
 const Question = require("../models/question.model");
 const auth = require("../middlewares/auth.middleware");
+const Test = require("../models/test.model");
 
 router.use(express.json());
 
@@ -45,12 +46,28 @@ router.post("/create", auth, async (req, res) => {
   }
 });
 router.get("/getQuestions", auth, async (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(400).send("You are not allowed to see a questions");
-  }
   try {
-    const questions = await Question.find({ testId: req.query.testId });
+    const { testId } = req.query;
 
+    const exam = await Test.findById(testId);
+    if (!exam) {
+      return res.status(404).json({ message: "Exam not found." });
+    }
+
+    if (req.user.isAdmin) {
+      const questions = await Question.find({ testId });
+      return res.status(200).json(questions);
+    }
+
+    const currentTime = new Date();
+    const startTime = new Date();
+    const [hours, minutes] = exam.startTime.split(":");
+    startTime.setHours(hours, minutes, 0, 0);
+    if (currentTime < startTime) {
+      return res.status(400).json({ message: "Exam has not started yet." });
+    }
+
+    const questions = await Question.find({ testId });
     return res.status(200).json(questions);
   } catch (error) {
     console.error("Error fetching questions:", error);

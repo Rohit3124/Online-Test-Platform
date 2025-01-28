@@ -6,6 +6,8 @@ import PrivateRoute from "./components/privateRoute";
 import OnlyAdminPrivateRoute from "./components/onlyAdminPrivateRoute";
 import AdminDashboard from "./pages/adminDashboard";
 import ExamDetails from "./pages/ExamDetails";
+import QuestionPaper from "./pages/questionPaper";
+import Start from "./pages/start";
 
 export default function App() {
   return (
@@ -14,7 +16,12 @@ export default function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route element={<PrivateRoute />}>
+          <Route path="/" element={<Start />} />
           <Route path="/student" element={<Home />} />
+          <Route
+            path="/student/question-paper/:testId"
+            element={<QuestionPaper />}
+          />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>

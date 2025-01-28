@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, Button } from "flowbite-react";
 import { Link } from "react-router-dom";
+
 const StudentExam = () => {
   const [exams, setExams] = useState([]);
   useEffect(() => {
@@ -44,7 +45,7 @@ const StudentExam = () => {
                     </Table.Cell>
                     <Table.Cell>{exam.startTime}</Table.Cell>
                     <Table.Cell>
-                      <Link to={``}>
+                      <Link to={`/student/question-paper/${exam._id}`}>
                         <Button gradientMonochrome="cyan">Start</Button>
                       </Link>
                     </Table.Cell>

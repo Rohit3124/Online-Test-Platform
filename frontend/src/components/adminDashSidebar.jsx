@@ -1,9 +1,11 @@
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight } from "react-icons/hi";
 import { PiStudent, PiExam } from "react-icons/pi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { currentUserContext } from "../context/userContext";
 const DashSidebar = () => {
+  const { setCurrentUser } = useContext(currentUserContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [tab, setTab] = useState("");
@@ -21,7 +23,8 @@ const DashSidebar = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        navigate("/");
+        setCurrentUser(null);
+        navigate("/sign-in");
       }
     } catch (error) {
       console.log(error.message);

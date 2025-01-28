@@ -16,16 +16,26 @@ const TestSchema = Joi.object({
     "date.base": "Test Date must be a valid date.",
     "any.required": "Test Date is required.",
   }),
-  startTime: Joi.string().required().messages({
-    "string.base": "Start Time must be a string.",
-    "string.empty": "Start Time is required.",
-    "any.required": "Start Time is a required field.",
-  }),
-  endTime: Joi.string().required().messages({
-    "string.base": "End Time must be a string.",
-    "string.empty": "End Time is required.",
-    "any.required": "End Time is a required field.",
-  }),
+  startTime: Joi.string()
+    .pattern(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/)
+    .required()
+    .messages({
+      "string.base": "Start Time must be a string.",
+      "string.empty": "Start Time is required.",
+      "any.required": "Start Time is a required field.",
+      "string.pattern.base":
+        "startTime must be in the format HH:mm (24-hour time)",
+    }),
+  endTime: Joi.string()
+    .pattern(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/)
+    .required()
+    .messages({
+      "string.base": "End Time must be a string.",
+      "string.empty": "End Time is required.",
+      "any.required": "End Time is a required field.",
+      "string.pattern.base":
+        "startTime must be in the format HH:mm (24-hour time)",
+    }),
   totalMarks: Joi.number().required().messages({
     "number.base": "Total Marks must be a number.",
     "any.required": "Total Marks is required.",
@@ -122,26 +132,18 @@ const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
               </div>
             </div>
             <div className="flex justify-between">
-              <div>
+              <div className="w-52">
                 <Label value="Start Time" />
-                <TextInput
-                  placeholder="hh:mm aa"
-                  className="w-52"
-                  {...register("startTime")}
-                />
+                <TextInput placeholder="hh:mm" {...register("startTime")} />
                 {errors.startTime && (
                   <span className="text-red-500 text-sm">
                     {errors.startTime.message}
                   </span>
                 )}
               </div>
-              <div>
+              <div className="w-52">
                 <Label value="End Time" />
-                <TextInput
-                  placeholder="hh:mm aa"
-                  className="w-52"
-                  {...register("endTime")}
-                />
+                <TextInput placeholder="hh:mm" {...register("endTime")} />
                 {errors.endTime && (
                   <span className="text-red-500 text-sm">
                     {errors.endTime.message}

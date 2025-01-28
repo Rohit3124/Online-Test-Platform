@@ -44,22 +44,21 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
   } = useForm({
     resolver: joiResolver(QuestionSchema),
   });
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const res = await fetch(`/api/question/getQuestions?testId=${testId}`);
-        if (!res.ok) {
-          return alert("Failed to fetch questions");
-        }
-        const data = await res.json();
-        setQuestionsCount(data.length);
-      } catch (err) {
-        console.log(err.message);
+  const fetchQuestions = async () => {
+    try {
+      const res = await fetch(`/api/question/getQuestions?testId=${testId}`);
+      if (!res.ok) {
+        return alert("Failed to fetch questions");
       }
-    };
-
+      const data = await res.json();
+      setQuestionsCount(data.length);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  const handleSaveQuestion = () => {
     fetchQuestions();
-  });
+  };
   const onSubmit = async (data) => {
     const questionData = {
       ...data,
@@ -165,7 +164,7 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
           </div>
 
           <div className="flex justify-between mt-5">
-            <Button type="submit" className="mr-2">
+            <Button type="submit" className="mr-2" onClick={handleSaveQuestion}>
               Save Question
             </Button>
             <Button
