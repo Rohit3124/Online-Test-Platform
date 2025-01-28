@@ -13,6 +13,7 @@ function validate(req) {
     question: Joi.string().required(),
     options: Joi.array().items(Joi.string()).length(4).required(),
     correctOption: Joi.array().items(Joi.string()).required(),
+    marks: Joi.number().min(0).required(),
     negativeMarks: Joi.number().min(0).optional(),
   });
 
@@ -26,12 +27,14 @@ router.post("/create", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { testId, question, options, correctOption, negativeMarks } = req.body;
+  const { testId, question, options, correctOption, marks, negativeMarks } =
+    req.body;
   const newQuestion = new Question({
     testId,
     question,
     options,
     correctOption,
+    marks,
     negativeMarks,
   });
   try {
@@ -80,16 +83,27 @@ router.put("/updateQuestion/:id", auth, async (req, res) => {
   }
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  const { testId, question, options, correctOption, negativeMarks } = req.body;
+  const { testId, question, options, correctOption, marks, negativeMarks } =
+    req.body;
   try {
     const updatedQuestion = await Question.findByIdAndUpdate(
       req.params.id,
       {
-        $set: { testId, question, options, correctOption, negativeMarks },
+        $set: {
+          testId,
+          question,
+          options,
+          correctOption,
+          marks,
+          negativeMarks,
+        },
       },
       { new: true }
     );
-    res.status(200).json(updatedQuestion);
+    res.status(200).json({
+      message: "Question created successfully",
+      question: updatedQuestion,
+    });
   } catch (error) {
     alert(error.message);
   }

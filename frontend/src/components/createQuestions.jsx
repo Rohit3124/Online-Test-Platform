@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -28,6 +28,11 @@ const QuestionSchema = Joi.object({
       "array.max": "There can be at most 4 correct options.",
       "any.required": "Correct option(s) are required.",
     }),
+  marks: Joi.number().min(0).required().messages({
+    "number.base": "Marks must be a number.",
+    "number.min": "Marks cannot be less than 0.",
+    "any.required": "Correct option(s) are required.",
+  }),
   negativeMarks: Joi.number().min(0).optional().messages({
     "number.base": "Negative marks must be a number.",
     "number.min": "Negative marks cannot be less than 0.",
@@ -148,19 +153,35 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
             )}
           </div>
 
-          <div className="mb-4">
-            <Label value="Negative Marks" />
-            <TextInput
-              type="number"
-              placeholder="Enter negative marks"
-              defaultValue={0}
-              {...register("negativeMarks", { valueAsNumber: true })}
-            />
-            {errors.negativeMarks && (
-              <span className="text-red-500 text-sm">
-                {errors.negativeMarks.message}
-              </span>
-            )}
+          <div className="flex justify-between">
+            <div className="mb-4 w-52">
+              <Label value="Marks" />
+              <TextInput
+                type="number"
+                placeholder="Enter marks"
+                defaultValue={0}
+                {...register("marks", { valueAsNumber: true })}
+              />
+              {errors.marks && (
+                <span className="text-red-500 text-sm">
+                  {errors.marks.message}
+                </span>
+              )}
+            </div>
+            <div className="mb-4 w-52">
+              <Label value="Negative Marks" />
+              <TextInput
+                type="number"
+                placeholder="Enter negative marks"
+                defaultValue={0}
+                {...register("negativeMarks", { valueAsNumber: true })}
+              />
+              {errors.negativeMarks && (
+                <span className="text-red-500 text-sm">
+                  {errors.negativeMarks.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-between mt-5">

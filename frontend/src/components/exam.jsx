@@ -56,7 +56,7 @@ const Exam = () => {
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
   const [openEditTestModal, setOpenEditTestModal] = useState(false);
   const [selectedTest, setSelectedTest] = useState(null);
-  const [openDeleteTestModa, setOpenDeleteTestModal] = useState(false);
+  const [openDeleteTestModal, setOpenDeleteTestModal] = useState(false);
   const [testId, setTestId] = useState("");
   const [exams, setExams] = useState([]);
 
@@ -90,7 +90,7 @@ const Exam = () => {
     };
 
     fetchExams();
-  }, [openEditTestModal, openDeleteTestModa, openTestModal]);
+  }, [openEditTestModal, openDeleteTestModal, openTestModal]);
 
   const onSubmit = async (data) => {
     const formattedData = {
@@ -288,7 +288,7 @@ const Exam = () => {
         test={selectedTest}
       />
       <Modal
-        show={openDeleteTestModa}
+        show={openDeleteTestModal}
         size="md"
         onClose={() => setOpenDeleteTestModal(false)}
         popup
