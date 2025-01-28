@@ -7,6 +7,7 @@ const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/auth.route");
 const testRoutes = require("./routes/test.route");
 const questionRoutes = require("./routes/question.route");
+const resultRoutes = require("./routes/result.route");
 
 if (!config.get("jwtSecretKey")) {
   throw new Error("FATAL ERROR: jwtSecretKey is not defined");
@@ -18,6 +19,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/exam", testRoutes);
 app.use("/api/question", questionRoutes);
+app.use("/api/result", resultRoutes);
 
 mongoose
   .connect("mongodb://localhost/online-test")
