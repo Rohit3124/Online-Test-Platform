@@ -13,6 +13,11 @@ const QuestionSchema = Joi.object({
     "string.empty": "Question is required.",
     "any.required": "Question is required field.",
   }),
+  subject: Joi.string().required().messages({
+    "string.base": "Subject must be a string.",
+    "string.empty": "Subject is required.",
+    "any.required": "Subject is required field.",
+  }),
   options: Joi.array().items(Joi.string()).length(4).required().messages({
     "array.base": "Options must be an array.",
     "array.min": "There must be exactly 4 options.",
@@ -81,6 +86,7 @@ const ExamDetails = () => {
     setSelectedQuestion(question);
     reset({
       question: question.question,
+      subject: question.subject,
       options: question.options.join(", "),
       correctOption: question.correctOption.join(", "),
       marks: question.marks,
@@ -202,6 +208,20 @@ const ExamDetails = () => {
             </div>
 
             <div className="mb-4">
+              <Label value="Subject" />
+              <TextInput
+                type="text"
+                placeholder="Enter the subject"
+                {...register("subject")}
+              />
+              {errors.subject && (
+                <span className="text-red-500 text-sm">
+                  {errors.subject.message}
+                </span>
+              )}
+            </div>
+
+            <div className="mb-4">
               <Label value="Options" />
               <Textarea
                 placeholder="Enter options, separated by commas"
@@ -239,6 +259,7 @@ const ExamDetails = () => {
                 </span>
               )}
             </div>
+
             <div className="flex justify-between">
               <div className="mb-4 w-52">
                 <Label value="Marks" />
@@ -269,6 +290,7 @@ const ExamDetails = () => {
                 )}
               </div>
             </div>
+
             <div className="flex justify-center mt-5">
               <Button type="submit" className="mr-2">
                 Update

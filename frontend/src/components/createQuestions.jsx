@@ -11,6 +11,11 @@ const QuestionSchema = Joi.object({
     "string.empty": "Question is required.",
     "any.required": "Question is required field.",
   }),
+  subject: Joi.string().required().messages({
+    "string.base": "Subject must be a string.",
+    "string.empty": "Subject is required.",
+    "any.required": "Subject is required field.",
+  }),
   options: Joi.array().items(Joi.string()).length(4).required().messages({
     "array.base": "Options must be an array.",
     "array.min": "There must be exactly 4 options.",
@@ -31,7 +36,7 @@ const QuestionSchema = Joi.object({
   marks: Joi.number().min(0).required().messages({
     "number.base": "Marks must be a number.",
     "number.min": "Marks cannot be less than 0.",
-    "any.required": "Correct option(s) are required.",
+    "any.required": "Marks are required.",
   }),
   negativeMarks: Joi.number().min(0).optional().messages({
     "number.base": "Negative marks must be a number.",
@@ -44,11 +49,12 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm({
     resolver: joiResolver(QuestionSchema),
   });
+
   const fetchQuestions = async () => {
     try {
       const res = await fetch(`/api/question/getQuestions?testId=${testId}`);
@@ -61,9 +67,11 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
       console.log(err.message);
     }
   };
+
   const handleSaveQuestion = () => {
     fetchQuestions();
   };
+
   const onSubmit = async (data) => {
     const questionData = {
       ...data,
@@ -113,7 +121,19 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
               </span>
             )}
           </div>
-
+          <div className="mb-4">
+            <Label value="Subject" />
+            <TextInput
+              type="text"
+              placeholder="Enter the subject"
+              {...register("subject")}
+            />
+            {errors.subject && (
+              <span className="text-red-500 text-sm">
+                {errors.subject.message}
+              </span>
+            )}
+          </div>
           <div className="mb-4">
             <Label value="Options" />
             <Textarea
@@ -200,9 +220,11 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
     </Modal>
   );
 };
+
 Question.propTypes = {
   openQuestionModal: PropTypes.bool.isRequired,
   setOpenQuestionModal: PropTypes.func.isRequired,
   testId: PropTypes.string.isRequired,
 };
+
 export default Question;
