@@ -30,6 +30,8 @@ const StudentExam = () => {
               <Table.Head>
                 <Table.HeadCell>Exam Name</Table.HeadCell>
                 <Table.HeadCell>Exam Date</Table.HeadCell>
+                <Table.HeadCell>Subjets</Table.HeadCell>
+                <Table.HeadCell>Syllabus</Table.HeadCell>
                 <Table.HeadCell>Start Time</Table.HeadCell>
                 <Table.HeadCell>Status</Table.HeadCell>
               </Table.Head>
@@ -43,9 +45,14 @@ const StudentExam = () => {
                     <Table.Cell>
                       {new Date(exam.testDate).toLocaleDateString()}
                     </Table.Cell>
+                    <Table.Cell>{exam.subject.join(", ")}</Table.Cell>
+                    <Table.Cell>{exam.syllabus}</Table.Cell>
                     <Table.Cell>{exam.startTime}</Table.Cell>
                     <Table.Cell>
-                      <Link to={`/student/question-paper/${exam._id}`}>
+                      <Link
+                        to={`/student/question-paper/${exam._id}`}
+                        state={{ exam }}
+                      >
                         <Button gradientMonochrome="cyan">Start</Button>
                       </Link>
                     </Table.Cell>

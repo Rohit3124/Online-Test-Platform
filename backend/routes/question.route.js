@@ -72,9 +72,15 @@ router.get("/getQuestions", auth, async (req, res) => {
     }
 
     const currentTime = new Date();
-    const startTime = new Date();
+    const startTime = new Date(exam.date);
     const [hours, minutes] = exam.startTime.split(":");
+
     startTime.setHours(hours, minutes, 0, 0);
+
+    if (currentTime.toDateString() < startTime.toDateString()) {
+      return res.status(400).json({ message: "Exam has not started yet." });
+    }
+
     if (currentTime < startTime) {
       return res.status(400).json({ message: "Exam has not started yet." });
     }
