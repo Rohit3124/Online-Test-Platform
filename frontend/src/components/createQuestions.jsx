@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -219,12 +218,6 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
       </Modal.Body>
     </Modal>
   );
-};
-
-Question.propTypes = {
-  openQuestionModal: PropTypes.bool.isRequired,
-  setOpenQuestionModal: PropTypes.func.isRequired,
-  testId: PropTypes.string.isRequired,
 };
 
 export default Question;

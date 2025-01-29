@@ -1,5 +1,4 @@
 import { Label, Checkbox } from "flowbite-react";
-import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 
 const QuestionComponent = ({
@@ -61,18 +60,6 @@ const QuestionComponent = ({
       </div>
     </div>
   );
-};
-
-QuestionComponent.propTypes = {
-  questionDetails: PropTypes.shape({
-    index: PropTypes.number.isRequired,
-    question: PropTypes.string.isRequired,
-    options: PropTypes.arrayOf(PropTypes.string).isRequired,
-    _id: PropTypes.string.isRequired,
-  }).isRequired,
-  disableOptions: PropTypes.bool.isRequired,
-  updateQuestionStatus: PropTypes.func.isRequired,
-  questionStatus: PropTypes.object.isRequired,
 };
 
 export default QuestionComponent;

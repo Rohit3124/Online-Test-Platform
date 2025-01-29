@@ -11,8 +11,6 @@ import { useForm, Controller } from "react-hook-form";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 
-import PropTypes from "prop-types";
-
 const TestSchema = Joi.object({
   testName: Joi.string().required().messages({
     "string.base": "Test Name must be a string.",
@@ -211,21 +209,6 @@ const EditExamModal = ({ openEditTestModal, setOpenEditTestModal, test }) => {
       </Modal.Body>
     </Modal>
   );
-};
-
-EditExamModal.propTypes = {
-  openEditTestModal: PropTypes.bool.isRequired,
-  setOpenEditTestModal: PropTypes.func.isRequired,
-  test: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    testName: PropTypes.string.isRequired,
-    testDate: PropTypes.string.isRequired,
-    totalMarks: PropTypes.number.isRequired,
-    startTime: PropTypes.string.isRequired,
-    endTime: PropTypes.string.isRequired,
-    subject: PropTypes.arrayOf(PropTypes.string).isRequired,
-    syllabus: PropTypes.string.isRequired,
-  }),
 };
 
 export default EditExamModal;
