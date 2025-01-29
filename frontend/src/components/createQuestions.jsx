@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Label, Modal, TextInput, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

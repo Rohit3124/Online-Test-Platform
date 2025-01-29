@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Label, Checkbox } from "flowbite-react";
 import { useState, useEffect } from "react";
 
