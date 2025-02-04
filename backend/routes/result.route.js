@@ -55,5 +55,17 @@ router.post("/create", auth, async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+router.get("/getResults", auth, async (req, res) => {
+  try {
+    const studentId = req.user.id;
+
+    const results = await Result.find({ studentId });
+
+    return res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching results:", error);
+    return res.status(500).json({ message: "Failed to fetch results." });
+  }
+});
 
 module.exports = router;

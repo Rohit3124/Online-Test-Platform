@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/adminDashboard";
 import ExamDetails from "./pages/ExamDetails";
 import QuestionPaper from "./pages/questionPaper";
 import Start from "./pages/start";
+import ExamResult from "./pages/examResult";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
             path="/student/question-paper/:testId"
             element={<QuestionPaper />}
           />
+          <Route path="/student/result/:testId" element={<ExamResult />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>

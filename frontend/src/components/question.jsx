@@ -8,10 +8,11 @@ const QuestionComponent = ({
   updateQuestionStatus,
   questionStatus,
 }) => {
-  const { index, question, options, _id } = questionDetails;
+  const { index, question, options, correctOption, _id } = questionDetails;
   const initialSelection =
     JSON.parse(localStorage.getItem(`selectedOptions_${_id}`)) || [];
   const [selectedOptions, setSelectedOptions] = useState(initialSelection);
+  const user = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
     localStorage.setItem(
@@ -21,7 +22,7 @@ const QuestionComponent = ({
   }, [selectedOptions, _id]);
 
   useEffect(() => {
-    if (questionStatus[_id] === "review") {
+    if (questionStatus && questionStatus[_id] === "review") {
       setSelectedOptions([]);
       localStorage.setItem(`selectedOptions_${_id}`, JSON.stringify([]));
     }
@@ -51,7 +52,11 @@ const QuestionComponent = ({
               id={`${_id}-${i}`}
               name={_id}
               value={option}
-              checked={selectedOptions.includes(option)}
+              checked={
+                !user.isAdmin
+                  ? selectedOptions.includes(option)
+                  : correctOption.includes(option)
+              }
               onChange={() => handleCheckboxChange(option)}
               disabled={disableOptions}
             />

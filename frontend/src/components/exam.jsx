@@ -136,7 +136,7 @@ const Exam = () => {
       const res = await fetch(`/api/exam/deleteExam/${selectedTest._id}`, {
         method: "DELETE",
       });
-      const responseData = await res.json();
+      await res.json();
     } catch (error) {
       console.log(error);
       alert(error.message || "Something went wrong. Please try again later.");
