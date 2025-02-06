@@ -1,6 +1,7 @@
 import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import QuestionComponent from "../components/question";
+import TestHeader from "../components/testHeader";
 
 const QuestionPaper = () => {
   const { testId } = useParams();
@@ -67,96 +68,103 @@ const QuestionPaper = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex justify-center gap-4 mt-5">
-        {subjects.map((subject) => (
-          <button
-            key={subject}
-            className={`px-4 py-2 rounded ${
-              selectedSubject === subject
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
-            }`}
-            onClick={() => handleSubjectChange(subject)}
-          >
-            {subject}
-          </button>
-        ))}
-      </div>
-
-      {questions.map((question, index) => (
-        <div
-          key={question._id}
-          className="flex flex-col items-center justify-center border p-4 rounded-lg"
-        >
-          <QuestionComponent
-            questionDetails={{ ...question, index }}
-            disableOptions={false}
-            updateQuestionStatus={updateQuestionStatus}
-            questionStatus={questionStatus}
-          />
-
-          <div className="flex gap-2 mt-2">
+    <>
+      <TestHeader />
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-center gap-4 mt-5">
+          {subjects.map((subject) => (
             <button
-              className={`px-3 py-1 rounded ${
-                questionStatus[question._id] === "attempted"
-                  ? "bg-green-500 text-white"
+              key={subject}
+              className={`px-4 py-2 rounded ${
+                selectedSubject === subject
+                  ? "bg-blue-500 text-white"
                   : "bg-gray-200"
               }`}
-              disabled
+              onClick={() => handleSubjectChange(subject)}
             >
-              Attempted
+              {subject}
             </button>
-
-            <button
-              className={`px-3 py-1 rounded ${
-                questionStatus[question._id] === "not_attempted"
-                  ? "bg-red-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              disabled
-            >
-              Not Attempted
-            </button>
-
-            <button
-              className={`px-3 py-1 rounded ${
-                questionStatus[question._id] === "review"
-                  ? "bg-yellow-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              onClick={() => updateQuestionStatus(question._id, "review")}
-            >
-              Mark for Review
-            </button>
-          </div>
+          ))}
         </div>
-      ))}
 
-      <div className="p-4 border rounded-lg">
-        <h2 className="text-lg font-bold mb-2">Question Status Summary</h2>
-        <ul>
-          <li>
-            Attempted:{" "}
-            {
-              Object.values(questionStatus).filter((s) => s === "attempted")
-                .length
-            }
-          </li>
-          <li>
-            Not Attempted:{" "}
-            {
-              Object.values(questionStatus).filter((s) => s === "not_attempted")
-                .length
-            }
-          </li>
-          <li>
-            Marked for Review:{" "}
-            {Object.values(questionStatus).filter((s) => s === "review").length}
-          </li>
-        </ul>
+        {questions.map((question, index) => (
+          <div
+            key={question._id}
+            className="flex flex-col items-center justify-center border p-4 rounded-lg"
+          >
+            <QuestionComponent
+              questionDetails={{ ...question, index }}
+              disableOptions={false}
+              updateQuestionStatus={updateQuestionStatus}
+              questionStatus={questionStatus}
+            />
+
+            <div className="flex gap-2 mt-2">
+              <button
+                className={`px-3 py-1 rounded ${
+                  questionStatus[question._id] === "attempted"
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                disabled
+              >
+                Attempted
+              </button>
+
+              <button
+                className={`px-3 py-1 rounded ${
+                  questionStatus[question._id] === "not_attempted"
+                    ? "bg-red-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                disabled
+              >
+                Not Attempted
+              </button>
+
+              <button
+                className={`px-3 py-1 rounded ${
+                  questionStatus[question._id] === "review"
+                    ? "bg-yellow-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => updateQuestionStatus(question._id, "review")}
+              >
+                Mark for Review
+              </button>
+            </div>
+          </div>
+        ))}
+
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-lg font-bold mb-2">Question Status Summary</h2>
+          <ul>
+            <li>
+              Attempted:{" "}
+              {
+                Object.values(questionStatus).filter((s) => s === "attempted")
+                  .length
+              }
+            </li>
+            <li>
+              Not Attempted:{" "}
+              {
+                Object.values(questionStatus).filter(
+                  (s) => s === "not_attempted"
+                ).length
+              }
+            </li>
+            <li>
+              Marked for Review:{" "}
+              {
+                Object.values(questionStatus).filter((s) => s === "review")
+                  .length
+              }
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

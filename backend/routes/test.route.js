@@ -10,12 +10,8 @@ function validate(req) {
   const schema = Joi.object({
     testName: Joi.string().required(),
     testDate: Joi.date().required(),
-    startTime: Joi.string()
-      .required()
-      .pattern(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/),
-    endTime: Joi.string()
-      .required()
-      .pattern(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/),
+    startTime: Joi.string().required(),
+    endTime: Joi.string().required(),
     totalMarks: Joi.number().required(),
     subject: Joi.array().items(Joi.string().required()).required(),
     syllabus: Joi.string().required(),

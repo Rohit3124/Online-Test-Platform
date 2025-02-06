@@ -24,12 +24,10 @@ const testSchema = new mongoose.Schema(
     startTime: {
       type: String,
       required: true,
-      match: /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/,
     },
     endTime: {
       type: String,
       required: true,
-      match: /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/,
     },
     totalMarks: {
       type: Number,

@@ -56,7 +56,7 @@ const ExamDetails = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm({
     resolver: joiResolver(QuestionSchema),
@@ -129,7 +129,7 @@ const ExamDetails = () => {
           method: "DELETE",
         }
       );
-      const responseData = await res.json();
+      await res.json();
     } catch (error) {
       console.log(error);
       alert(error.message || "Something went wrong. Please try again later.");

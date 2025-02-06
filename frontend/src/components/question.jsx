@@ -55,7 +55,7 @@ const QuestionComponent = ({
               checked={
                 !user.isAdmin
                   ? selectedOptions.includes(option)
-                  : correctOption.includes(option)
+                  : correctOption.includes(String(i + 1))
               }
               onChange={() => handleCheckboxChange(option)}
               disabled={disableOptions}
