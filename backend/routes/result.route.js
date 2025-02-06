@@ -58,8 +58,18 @@ router.post("/create", auth, async (req, res) => {
 router.get("/getResults", auth, async (req, res) => {
   try {
     const studentId = req.user.id;
+    const { resultId } = req.query;
 
-    const results = await Result.find({ studentId });
+    let results;
+
+    if (resultId) {
+      results = await Result.findOne({ _id: resultId, studentId });
+      if (!results) {
+        return res.status(404).json({ message: "Result not found." });
+      }
+    } else {
+      results = await Result.find({ studentId });
+    }
 
     return res.status(200).json(results);
   } catch (error) {

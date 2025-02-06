@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table, Button } from "flowbite-react";
+import { Link } from "react-router-dom";
 
 const StudentResult = () => {
   const [results, setResults] = useState([]);
@@ -44,11 +45,11 @@ const StudentResult = () => {
     return {
       examName: exam.testName,
       examDate: exam.testDate,
-      subjects: exam.subject?.join(", "),
+      subjects: exam.subject.join(", "),
       syllabus: exam.syllabus,
       score: result.score,
       rank: result.rank,
-      resultStatus: result.resultStatus,
+      resultId: result._id,
     };
   });
 
@@ -80,7 +81,9 @@ const StudentResult = () => {
                     <Table.Cell>{data.score}</Table.Cell>
                     <Table.Cell>{data.rank}</Table.Cell>
                     <Table.Cell>
-                      <Button gradientMonochrome="info">Result</Button>
+                      <Link to={`/student/exam-result/${data.resultId}`}>
+                        <Button gradientMonochrome="info">Result</Button>
+                      </Link>
                     </Table.Cell>
                   </Table.Row>
                 ))}
