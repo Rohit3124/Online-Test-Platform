@@ -3,6 +3,24 @@ import { Table, Button } from "flowbite-react";
 
 const StudentResult = () => {
   const [results, setResults] = useState([]);
+  const [exams, setExams] = useState([]);
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const res = await fetch(`/api/exam/getExams`);
+        if (!res.ok) {
+          return alert("Failed to fetch exams");
+        }
+        const data = await res.json();
+        setExams(data);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    fetchExams();
+  }, []);
 
   useEffect(() => {
     const fetchStudentResults = async () => {
@@ -20,12 +38,25 @@ const StudentResult = () => {
 
     fetchStudentResults();
   }, []);
-  console.log(results);
+
+  const mergedData = results.map((result) => {
+    const exam = exams.find((exam) => exam._id === result.testId);
+    return {
+      examName: exam.testName,
+      examDate: exam.testDate,
+      subjects: exam.subject?.join(", "),
+      syllabus: exam.syllabus,
+      score: result.score,
+      rank: result.rank,
+      resultStatus: result.resultStatus,
+    };
+  });
+
   return (
     <div className="p-3 w-full">
       <div>
         <div className="text-4xl mb-4">Results</div>
-        {results.length > 0 ? (
+        {mergedData.length > 0 ? (
           <div className="overflow-x-auto">
             <Table hoverable className="shadow-md">
               <Table.Head>
@@ -37,10 +68,27 @@ const StudentResult = () => {
                 <Table.HeadCell>Rank</Table.HeadCell>
                 <Table.HeadCell>Result</Table.HeadCell>
               </Table.Head>
+              <Table.Body>
+                {mergedData.map((data, index) => (
+                  <Table.Row key={index} className="border-b">
+                    <Table.Cell>{data.examName}</Table.Cell>
+                    <Table.Cell>
+                      {new Date(data.examDate).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell>{data.subjects}</Table.Cell>
+                    <Table.Cell>{data.syllabus}</Table.Cell>
+                    <Table.Cell>{data.score}</Table.Cell>
+                    <Table.Cell>{data.rank}</Table.Cell>
+                    <Table.Cell>
+                      <Button gradientMonochrome="info">Result</Button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
             </Table>
           </div>
         ) : (
-          <div className="text-2xl">No exams available</div>
+          <div className="text-2xl">No results</div>
         )}
       </div>
     </div>

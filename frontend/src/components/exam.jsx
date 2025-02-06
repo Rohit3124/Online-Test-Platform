@@ -99,7 +99,7 @@ const Exam = () => {
     };
 
     fetchExams();
-  }, [openEditTestModal, openDeleteTestModal, openTestModal]);
+  }, [openEditTestModal, openDeleteTestModal, openTestModal, selectedTest]);
 
   const onSubmit = async (data) => {
     const formattedData = {
@@ -130,6 +130,7 @@ const Exam = () => {
     setOpenDeleteTestModal(true);
     setSelectedTest(exam);
   };
+
   const handleDeleteTest = async () => {
     setOpenDeleteTestModal(false);
     try {
@@ -137,6 +138,7 @@ const Exam = () => {
         method: "DELETE",
       });
       await res.json();
+      setSelectedTest(null);
     } catch (error) {
       console.log(error);
       alert(error.message || "Something went wrong. Please try again later.");
