@@ -14,7 +14,7 @@ const QuestionPaper = () => {
     const savedStatus = localStorage.getItem(`questionStatus_${testId}`);
     return savedStatus ? JSON.parse(savedStatus) : {};
   });
-  console.log(questionStatus);
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -54,6 +54,7 @@ const QuestionPaper = () => {
   const handleSubjectChange = (subject) => {
     setSelectedSubject(subject);
   };
+
   const updateQuestionStatus = (questionId, status) => {
     setQuestionStatus((prev) => {
       let updatedStatus = { ...prev, [questionId]: status };
@@ -67,26 +68,24 @@ const QuestionPaper = () => {
     });
   };
 
+  const timeToMinutes = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
+  const examDuration =
+    timeToMinutes(exam.endTime) - timeToMinutes(exam.startTime);
+
   return (
     <>
-      <TestHeader />
-      <div className="flex flex-col gap-6">
-        <div className="flex justify-center gap-4 mt-5">
-          {subjects.map((subject) => (
-            <button
-              key={subject}
-              className={`px-4 py-2 rounded ${
-                selectedSubject === subject
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-              onClick={() => handleSubjectChange(subject)}
-            >
-              {subject}
-            </button>
-          ))}
-        </div>
+      <TestHeader
+        examDuration={examDuration}
+        subjects={subjects}
+        selectedSubject={selectedSubject}
+        handleSubjectChange={handleSubjectChange}
+      />
 
+      <div className="flex flex-col gap-6">
         {questions.map((question, index) => (
           <div
             key={question._id}
