@@ -2,6 +2,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import QuestionComponent from "../components/question";
 import TestHeader from "../components/testHeader";
+import QuestionSelector from "../components/questionSelector";
 
 const QuestionPaper = () => {
   const { testId } = useParams();
@@ -10,6 +11,7 @@ const QuestionPaper = () => {
   const subjects = exam.subject;
   const [selectedSubject, setSelectedSubject] = useState(subjects[0]);
   const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionStatus, setQuestionStatus] = useState(() => {
     const savedStatus = localStorage.getItem(`questionStatus_${testId}`);
     return savedStatus ? JSON.parse(savedStatus) : {};
@@ -30,6 +32,8 @@ const QuestionPaper = () => {
           (q) => q.subject === selectedSubject
         );
         setQuestions(subjectwiseQuestions);
+        setCurrentQuestionIndex(0);
+
         setQuestionStatus((prev) => {
           const newStatus = { ...prev };
           questionsData.forEach((q) => {
@@ -58,12 +62,10 @@ const QuestionPaper = () => {
   const updateQuestionStatus = (questionId, status) => {
     setQuestionStatus((prev) => {
       let updatedStatus = { ...prev, [questionId]: status };
-
       localStorage.setItem(
         `questionStatus_${testId}`,
         JSON.stringify(updatedStatus)
       );
-
       return updatedStatus;
     });
   };
@@ -84,56 +86,46 @@ const QuestionPaper = () => {
         selectedSubject={selectedSubject}
         handleSubjectChange={handleSubjectChange}
       />
+      <QuestionSelector
+        subjects={subjects}
+        selectedSubject={selectedSubject}
+        handleSubjectChange={handleSubjectChange}
+        questions={questions}
+        questionStatus={questionStatus}
+        setCurrentQuestion={setCurrentQuestionIndex}
+      />
 
       <div className="flex flex-col gap-6">
-        {questions.map((question, index) => (
-          <div
-            key={question._id}
-            className="flex flex-col items-center justify-center border p-4 rounded-lg"
-          >
+        {questions.length > 0 && (
+          <div className="flex flex-col items-center justify-center border p-4 rounded-lg">
             <QuestionComponent
-              questionDetails={{ ...question, index }}
+              questionDetails={{
+                ...questions[currentQuestionIndex],
+                index: currentQuestionIndex,
+              }}
               disableOptions={false}
               updateQuestionStatus={updateQuestionStatus}
               questionStatus={questionStatus}
             />
 
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-4 mt-4">
               <button
-                className={`px-3 py-1 rounded ${
-                  questionStatus[question._id] === "attempted"
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                disabled
+                className="px-4 py-2 rounded bg-gray-300"
+                disabled={currentQuestionIndex === 0}
+                onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
               >
-                Attempted
+                Previous
               </button>
-
               <button
-                className={`px-3 py-1 rounded ${
-                  questionStatus[question._id] === "not_attempted"
-                    ? "bg-red-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                disabled
+                className="px-4 py-2 rounded bg-gray-300"
+                disabled={currentQuestionIndex === questions.length - 1}
+                onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
               >
-                Not Attempted
-              </button>
-
-              <button
-                className={`px-3 py-1 rounded ${
-                  questionStatus[question._id] === "review"
-                    ? "bg-yellow-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => updateQuestionStatus(question._id, "review")}
-              >
-                Mark for Review
+                Next
               </button>
             </div>
           </div>
-        ))}
+        )}
 
         <div className="p-4 border rounded-lg">
           <h2 className="text-lg font-bold mb-2">Question Status Summary</h2>

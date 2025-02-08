@@ -30,7 +30,7 @@ const TestHeader = ({
       </div>
       <div className="flex px-5 py-3 bg-sky-100">
         <select
-          className="px-4 py-2 rounded border-none w-1/2  text-black"
+          className="px-4 py-2 rounded border-none w-1/2 text-black  focus:ring-4 focus:ring-blue-400"
           value={selectedSubject}
           onChange={(e) => handleSubjectChange(e.target.value)}
         >
