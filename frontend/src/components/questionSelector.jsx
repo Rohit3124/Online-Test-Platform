@@ -16,7 +16,7 @@ const QuestionSelector = ({
   };
 
   return (
-    <div className="w-3/5 mx-auto p-6 bg-sky-100 rounded-lg shadow-md my-5">
+    <div className=" p-6 bg-sky-100 rounded-lg shadow-md">
       <div className="flex gap-4 justify-start items-center mb-4 text-sm">
         <div className="flex items-center gap-1">
           <FaCircle className="text-gray-700" size="10" />
@@ -33,7 +33,7 @@ const QuestionSelector = ({
       </div>
 
       <select
-        className="w-1/3 px-4 py-2 mb-4 rounded border-none bg-white text-black outline-none focus:ring-0"
+        className="w-1/3 px-4 py-2 mb-4 rounded border-none bg-white text-black outline-none focus:ring-4 focus:ring-blue-400"
         value={selectedSubject}
         onChange={(e) => handleSubjectChange(e.target.value)}
       >

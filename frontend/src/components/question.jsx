@@ -41,9 +41,9 @@ const QuestionComponent = ({
   };
 
   return (
-    <div className="max-w-2xl w-full">
-      <div className="flex flex-col gap-4 p-4 border rounded-lg">
-        <legend className="font-semibold mb-2">
+    <div className="max-w-2xl w-full my-5 ">
+      <div className="flex flex-col gap-4 p-4 border rounded-lg ">
+        <legend className="font-semibold mb-2 text-lg">
           {index + 1}. {question}
         </legend>
         {options.map((option, i) => (
@@ -60,7 +60,9 @@ const QuestionComponent = ({
               onChange={() => handleCheckboxChange(option)}
               disabled={disableOptions}
             />
-            <Label htmlFor={`${_id}-${i}`}>{option}</Label>
+            <Label htmlFor={`${_id}-${i}`} className=" text-lg">
+              {option}
+            </Label>
           </div>
         ))}
       </div>

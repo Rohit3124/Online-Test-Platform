@@ -80,79 +80,89 @@ const QuestionPaper = () => {
 
   return (
     <>
-      <TestHeader
-        examDuration={examDuration}
-        subjects={subjects}
-        selectedSubject={selectedSubject}
-        handleSubjectChange={handleSubjectChange}
-      />
-      <QuestionSelector
-        subjects={subjects}
-        selectedSubject={selectedSubject}
-        handleSubjectChange={handleSubjectChange}
-        questions={questions}
-        questionStatus={questionStatus}
-        setCurrentQuestion={setCurrentQuestionIndex}
-      />
+      <div className="flex h-screen justify-evenly my-10">
+        <div className="w-1/2 flex flex-col gap-5">
+          <TestHeader
+            examDuration={examDuration}
+            subjects={subjects}
+            selectedSubject={selectedSubject}
+            handleSubjectChange={handleSubjectChange}
+          />
+          <div>
+            {questions.length > 0 && (
+              <div className="flex flex-col items-center justify-center border rounded-lg shadow-lg">
+                <QuestionComponent
+                  questionDetails={{
+                    ...questions[currentQuestionIndex],
+                    index: currentQuestionIndex,
+                  }}
+                  disableOptions={false}
+                  updateQuestionStatus={updateQuestionStatus}
+                  questionStatus={questionStatus}
+                />
 
-      <div className="flex flex-col gap-6">
-        {questions.length > 0 && (
-          <div className="flex flex-col items-center justify-center border p-4 rounded-lg">
-            <QuestionComponent
-              questionDetails={{
-                ...questions[currentQuestionIndex],
-                index: currentQuestionIndex,
-              }}
-              disableOptions={false}
-              updateQuestionStatus={updateQuestionStatus}
-              questionStatus={questionStatus}
-            />
+                <div className="flex gap-4 my-4">
+                  <button
+                    className="px-4 py-2 rounded bg-gray-300"
+                    disabled={currentQuestionIndex === 0}
+                    onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className="px-4 py-2 rounded bg-gray-300"
+                    disabled={currentQuestionIndex === questions.length - 1}
+                    onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="w-1/3 flex flex-col gap-16">
+          <QuestionSelector
+            subjects={subjects}
+            selectedSubject={selectedSubject}
+            handleSubjectChange={handleSubjectChange}
+            questions={questions}
+            questionStatus={questionStatus}
+            setCurrentQuestion={setCurrentQuestionIndex}
+          />
 
-            <div className="flex gap-4 mt-4">
-              <button
-                className="px-4 py-2 rounded bg-gray-300"
-                disabled={currentQuestionIndex === 0}
-                onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
-              >
-                Previous
-              </button>
-              <button
-                className="px-4 py-2 rounded bg-gray-300"
-                disabled={currentQuestionIndex === questions.length - 1}
-                onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
-              >
-                Next
-              </button>
+          <div className="flex flex-col gap-6">
+            <div className="p-4 border rounded-lg">
+              <h2 className="text-lg font-bold mb-2">
+                Question Status Summary
+              </h2>
+              <ul>
+                <li>
+                  Attempted:{" "}
+                  {
+                    Object.values(questionStatus).filter(
+                      (s) => s === "attempted"
+                    ).length
+                  }
+                </li>
+                <li>
+                  Not Attempted:{" "}
+                  {
+                    Object.values(questionStatus).filter(
+                      (s) => s === "not_attempted"
+                    ).length
+                  }
+                </li>
+                <li>
+                  Marked for Review:{" "}
+                  {
+                    Object.values(questionStatus).filter((s) => s === "review")
+                      .length
+                  }
+                </li>
+              </ul>
             </div>
           </div>
-        )}
-
-        <div className="p-4 border rounded-lg">
-          <h2 className="text-lg font-bold mb-2">Question Status Summary</h2>
-          <ul>
-            <li>
-              Attempted:{" "}
-              {
-                Object.values(questionStatus).filter((s) => s === "attempted")
-                  .length
-              }
-            </li>
-            <li>
-              Not Attempted:{" "}
-              {
-                Object.values(questionStatus).filter(
-                  (s) => s === "not_attempted"
-                ).length
-              }
-            </li>
-            <li>
-              Marked for Review:{" "}
-              {
-                Object.values(questionStatus).filter((s) => s === "review")
-                  .length
-              }
-            </li>
-          </ul>
         </div>
       </div>
     </>

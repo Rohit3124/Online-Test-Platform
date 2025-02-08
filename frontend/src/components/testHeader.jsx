@@ -16,7 +16,7 @@ const TestHeader = ({
   const totalMinutes = hours * 60 + minutes;
 
   return (
-    <div className="w-2/5 shadow-lg">
+    <div className="shadow-lg rounded-lg">
       <div className="flex p-5 items-center justify-between">
         <div className="flex items-center gap-2 text-red-500">
           <LuAlarmClock size={"2rem"} />
@@ -28,7 +28,7 @@ const TestHeader = ({
           Submit
         </Button>
       </div>
-      <div className="flex px-5 py-3 bg-sky-100">
+      <div className="flex px-5 py-3 bg-sky-100 rounded-b-btn">
         <select
           className="px-4 py-2 rounded border-none w-1/2 text-black  focus:ring-4 focus:ring-blue-400"
           value={selectedSubject}
