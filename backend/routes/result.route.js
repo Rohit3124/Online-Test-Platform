@@ -9,15 +9,21 @@ router.use(express.json());
 function validate(req) {
   const schema = Joi.object({
     testId: Joi.string().required(),
-    studentId: Joi.string().required(),
-    score: Joi.number().required(),
-    rank: Joi.number().required(),
-    answers: Joi.array()
+    students: Joi.array()
       .items(
         Joi.object({
-          questionId: Joi.string().required(),
-          selectedOption: Joi.string().required(),
-          isCorrect: Joi.boolean().required(),
+          studentId: Joi.string().required(),
+          score: Joi.number().required(),
+          rank: Joi.number().required(),
+          answers: Joi.array()
+            .items(
+              Joi.object({
+                questionId: Joi.string().required(),
+                selectedOption: Joi.string().required(),
+                isCorrect: Joi.boolean().required(),
+              })
+            )
+            .required(),
         })
       )
       .required(),
@@ -33,15 +39,12 @@ router.post("/create", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { testId, studentId, score, rank, answers } = req.body;
+  const { testId, students } = req.body;
 
   try {
     const newResult = new Result({
       testId,
-      studentId,
-      score,
-      rank,
-      answers,
+      students,
     });
 
     await newResult.save();
@@ -55,6 +58,7 @@ router.post("/create", auth, async (req, res) => {
     res.status(500).send("Something went wrong. Please try again later.");
   }
 });
+
 router.get("/getResults", auth, async (req, res) => {
   try {
     const studentId = req.user.id;
@@ -63,12 +67,15 @@ router.get("/getResults", auth, async (req, res) => {
     let results;
 
     if (resultId) {
-      results = await Result.findOne({ _id: resultId, studentId });
+      results = await Result.findOne({
+        _id: resultId,
+        "students.studentId": studentId,
+      });
       if (!results) {
         return res.status(404).json({ message: "Result not found." });
       }
     } else {
-      results = await Result.find({ studentId });
+      results = await Result.find({ "students.studentId": studentId });
     }
 
     return res.status(200).json(results);

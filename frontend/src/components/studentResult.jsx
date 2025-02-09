@@ -6,6 +6,10 @@ const StudentResult = () => {
   const [results, setResults] = useState([]);
   const [exams, setExams] = useState([]);
 
+  // Get current user from local storage
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const studentId = currentUser?._id;
+
   useEffect(() => {
     const fetchExams = async () => {
       try {
@@ -25,6 +29,8 @@ const StudentResult = () => {
 
   useEffect(() => {
     const fetchStudentResults = async () => {
+      if (!studentId) return;
+
       try {
         const res = await fetch(`/api/result/getResults`);
         if (!res.ok) {
@@ -38,20 +44,28 @@ const StudentResult = () => {
     };
 
     fetchStudentResults();
-  }, []);
+  }, [studentId]);
 
-  const mergedData = results.map((result) => {
-    const exam = exams.find((exam) => exam._id === result.testId);
-    return {
-      examName: exam.testName,
-      examDate: exam.testDate,
-      subjects: exam.subject.join(", "),
-      syllabus: exam.syllabus,
-      score: result.score,
-      rank: result.rank,
-      resultId: result._id,
-    };
-  });
+  const mergedData = results
+    .map((result) => {
+      const exam = exams.find((exam) => exam._id === result.testId);
+      const studentResult = result.students.find(
+        (s) => s.studentId === studentId
+      );
+
+      if (!exam || !studentResult) return null;
+
+      return {
+        examName: exam.testName,
+        examDate: exam.testDate,
+        subjects: exam.subject.join(", "),
+        syllabus: exam.syllabus,
+        score: studentResult.score,
+        rank: studentResult.rank,
+        resultId: result._id,
+      };
+    })
+    .filter(Boolean);
 
   return (
     <div className="p-3 w-full">
