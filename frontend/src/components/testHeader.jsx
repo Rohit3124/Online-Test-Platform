@@ -22,7 +22,7 @@ const TestHeader = ({
   const expiryTimestamp = new Date();
   expiryTimestamp.setMinutes(expiryTimestamp.getMinutes() + examDuration);
 
-  const { seconds, minutes, hours, isRunning } = useTimer({
+  const { seconds, minutes, hours } = useTimer({
     expiryTimestamp,
     onExpire: () => setShowModal(true),
   });
