@@ -9,10 +9,15 @@ const QuestionComponent = ({
   questionStatus,
 }) => {
   const { index, question, options, correctOption, _id } = questionDetails;
-  const initialSelection =
-    JSON.parse(localStorage.getItem(`selectedOptions_${_id}`)) || [];
-  const [selectedOptions, setSelectedOptions] = useState(initialSelection);
   const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  useEffect(() => {
+    const savedSelection =
+      JSON.parse(localStorage.getItem(`selectedOptions_${_id}`)) || [];
+    setSelectedOptions(savedSelection);
+  }, [_id]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -22,9 +27,8 @@ const QuestionComponent = ({
   }, [selectedOptions, _id]);
 
   useEffect(() => {
-    if (questionStatus && questionStatus[_id] === "review") {
+    if (questionStatus?.[_id] === "not_attempted") {
       setSelectedOptions([]);
-      localStorage.setItem(`selectedOptions_${_id}`, JSON.stringify([]));
     }
   }, [questionStatus, _id]);
 
@@ -35,14 +39,25 @@ const QuestionComponent = ({
 
     setSelectedOptions(updatedSelection);
 
-    const newStatus =
-      updatedSelection.length > 0 ? "attempted" : "not_attempted";
+    // Check if the question is currently marked for review
+    const isCurrentlyReviewed =
+      questionStatus[_id] === "review" ||
+      questionStatus[_id] === "review_with_answer";
+
+    // Determine new status
+    let newStatus;
+    if (updatedSelection.length > 0) {
+      newStatus = isCurrentlyReviewed ? "review_with_answer" : "attempted";
+    } else {
+      newStatus = isCurrentlyReviewed ? "review" : "not_attempted";
+    }
+
     updateQuestionStatus(_id, newStatus);
   };
 
   return (
-    <div className="max-w-2xl w-full my-5 ">
-      <div className="flex flex-col gap-4 p-4 border rounded-lg ">
+    <div className="max-w-2xl w-full my-5">
+      <div className="flex flex-col gap-4 p-4 border rounded-lg">
         <legend className="font-semibold mb-2 text-lg">
           {index + 1}. {question}
         </legend>
@@ -60,7 +75,7 @@ const QuestionComponent = ({
               onChange={() => handleCheckboxChange(option)}
               disabled={disableOptions}
             />
-            <Label htmlFor={`${_id}-${i}`} className=" text-lg">
+            <Label htmlFor={`${_id}-${i}`} className="text-lg">
               {option}
             </Label>
           </div>
