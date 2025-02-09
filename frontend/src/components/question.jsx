@@ -39,12 +39,10 @@ const QuestionComponent = ({
 
     setSelectedOptions(updatedSelection);
 
-    // Check if the question is currently marked for review
     const isCurrentlyReviewed =
       questionStatus[_id] === "review" ||
       questionStatus[_id] === "review_with_answer";
 
-    // Determine new status
     let newStatus;
     if (updatedSelection.length > 0) {
       newStatus = isCurrentlyReviewed ? "review_with_answer" : "attempted";

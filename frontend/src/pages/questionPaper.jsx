@@ -120,7 +120,7 @@ const QuestionPaper = () => {
         });
       }
     }
-  }, [currentQuestionIndex, questions]);
+  }, [currentQuestionIndex, questions, questionStatus, testId]);
   const handleMarkForReview = () => {
     const currentQuestionId = questions[currentQuestionIndex]._id;
 
