@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useTimer } from "react-timer-hook";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, Modal } from "flowbite-react";
 import { LuAlarmClock } from "react-icons/lu";
 import { IoIosCheckmarkCircle } from "react-icons/io";
@@ -13,12 +13,10 @@ const TestHeader = ({
   subjects,
   selectedSubject,
   handleSubjectChange,
-
-  handleSubmit,
 }) => {
   const { testId } = useParams();
   const [showModal, setShowModal] = useState(false);
-
+  const navigate = useNavigate();
   const expiryTimestamp = new Date();
   expiryTimestamp.setMinutes(expiryTimestamp.getMinutes() + examDuration);
 
@@ -30,7 +28,7 @@ const TestHeader = ({
   const totalMinutes = hours * 60 + minutes;
 
   const questionStatus =
-    JSON.parse(localStorage.getItem(`questionStatus_${testId}`)) || "{}";
+    JSON.parse(localStorage.getItem(`questionStatus_${testId}`)) || {};
 
   const attempted = Object.values(questionStatus).filter(
     (s) => s === "attempted" || s === "review_with_answer"
@@ -43,6 +41,99 @@ const TestHeader = ({
   const markedForReview = Object.values(questionStatus).filter(
     (s) => s === "review"
   ).length;
+
+  const handleSubmit = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      const studentId = currentUser._id;
+
+      if (!studentId) {
+        alert("Student ID not found. Please log in again.");
+        return;
+      }
+
+      const answers = [];
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("selectedOptions_")) {
+          const questionId = key.replace("selectedOptions_", "");
+          const selectedOption =
+            JSON.parse(localStorage.getItem(key))[0] || null;
+
+          if (selectedOption) {
+            answers.push({ questionId, selectedOption });
+          }
+        }
+      });
+
+      if (answers.length === 0) {
+        alert("No answers found to submit.");
+        return;
+      }
+
+      const response = await fetch(
+        `/api/question/getQuestions?testId=${testId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch question details");
+      }
+
+      const questions = await response.json();
+
+      let score = 0;
+      // let correctCount = 0;
+      // let incorrectCount = 0;
+
+      const formattedAnswers = answers.map(({ questionId, selectedOption }) => {
+        const question = questions.find((q) => q._id === questionId);
+        const isCorrect = question.correctOption.includes(selectedOption);
+        const marks = question.marks || 0;
+        const negativeMarks = question.negativeMarks || 0;
+        console.log(marks, negativeMarks);
+        if (isCorrect) {
+          score += marks;
+          // correctCount++;
+        } else {
+          score -= negativeMarks;
+          // incorrectCount++;
+        }
+
+        return { questionId, selectedOption, isCorrect };
+      });
+
+      const data = {
+        testId,
+        students: [
+          {
+            studentId,
+            score,
+            rank: 0,
+            answers: formattedAnswers,
+          },
+        ],
+      };
+
+      const submitResponse = await fetch("/api/result/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await submitResponse.json();
+      if (!submitResponse.ok) {
+        return alert("something went wrong");
+      }
+      console.log("Test submitted successfully!", result);
+      navigate("/student");
+      // Object.keys(localStorage).forEach((key) => {
+      //   if (key.startsWith("selectedOptions_")) {
+      //     localStorage.removeItem(key);
+      //   }
+      // });
+    } catch (error) {
+      console.error("Error submitting test:", error);
+      alert("Failed to submit test. Please try again.");
+    }
+  };
 
   return (
     <div className="shadow-lg rounded-lg">

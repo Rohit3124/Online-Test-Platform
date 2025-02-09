@@ -42,11 +42,13 @@ const QuestionPaper = () => {
             }
           });
 
-          if (subjectwiseQuestions.length > 0) {
+          if (
+            subjectwiseQuestions.length > 0 &&
+            Object.keys(prev).length === 0
+          ) {
             const firstQuestionId = subjectwiseQuestions[0]._id;
             newStatus[firstQuestionId] = "not_attempted";
           }
-
           localStorage.setItem(
             `questionStatus_${testId}`,
             JSON.stringify(newStatus)
@@ -69,7 +71,6 @@ const QuestionPaper = () => {
     setQuestionStatus((prev) => {
       let updatedStatus = { ...prev };
 
-      // Ensure "review_with_answer" is set correctly
       if (status === "review") {
         if (prev[questionId] === "attempted") {
           updatedStatus[questionId] = "review_with_answer";
@@ -291,9 +292,8 @@ const QuestionPaper = () => {
                 <li>
                   Marked for Review:{" "}
                   {
-                    Object.values(questionStatus).filter(
-                      (s) => s === "review" || s === "review_with_answer"
-                    ).length
+                    Object.values(questionStatus).filter((s) => s === "review")
+                      .length
                   }
                 </li>
                 <li>

@@ -6,9 +6,8 @@ const StudentResult = () => {
   const [results, setResults] = useState([]);
   const [exams, setExams] = useState([]);
 
-  // Get current user from local storage
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const studentId = currentUser?._id;
+  const studentId = currentUser._id;
 
   useEffect(() => {
     const fetchExams = async () => {

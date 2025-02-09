@@ -33,9 +33,6 @@ function validate(req) {
 }
 
 router.post("/create", auth, async (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(400).send("You are not allowed to create a result");
-  }
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

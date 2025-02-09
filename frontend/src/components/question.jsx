@@ -32,10 +32,11 @@ const QuestionComponent = ({
     }
   }, [questionStatus, _id]);
 
-  const handleCheckboxChange = (option) => {
-    let updatedSelection = selectedOptions.includes(option)
-      ? selectedOptions.filter((o) => o !== option)
-      : [...selectedOptions, option];
+  const handleCheckboxChange = (optionIndex) => {
+    const optionStr = String(optionIndex + 1);
+    let updatedSelection = selectedOptions.includes(optionStr)
+      ? selectedOptions.filter((o) => o !== optionStr)
+      : [...selectedOptions, optionStr];
 
     setSelectedOptions(updatedSelection);
 
@@ -64,13 +65,13 @@ const QuestionComponent = ({
             <Checkbox
               id={`${_id}-${i}`}
               name={_id}
-              value={option}
+              value={String(i + 1)}
               checked={
                 !user.isAdmin
-                  ? selectedOptions.includes(option)
+                  ? selectedOptions.includes(String(i + 1))
                   : correctOption.includes(String(i + 1))
               }
-              onChange={() => handleCheckboxChange(option)}
+              onChange={() => handleCheckboxChange(i)}
               disabled={disableOptions}
             />
             <Label htmlFor={`${_id}-${i}`} className="text-lg">
