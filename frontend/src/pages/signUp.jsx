@@ -49,8 +49,8 @@ const SignUp = () => {
       }
       setCurrentUser(responseData.user);
       responseData.isAdmin
-        ? navigate("/admin-dashboard")
-        : navigate("/student");
+        ? navigate("/admin-dashboard?tab=exam")
+        : navigate("/student?tab=exams");
     } catch (error) {
       console.error("Error during sign-in:", error);
       alert(error.message || "Something went wrong. Please try again later.");

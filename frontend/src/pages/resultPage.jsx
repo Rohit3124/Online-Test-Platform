@@ -5,7 +5,6 @@ import { Tabs } from "flowbite-react";
 const ResultPage = () => {
   const { resultId } = useParams();
   const [result, setResult] = useState(null);
-  const [testId, setTestId] = useState(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [maxMarks, setMaxMarks] = useState(0);
   const [marksData, setMarksData] = useState({});
@@ -19,7 +18,6 @@ const ResultPage = () => {
         }
         const resultData = await res.json();
         setResult(resultData);
-        setTestId(resultData.testId);
 
         const response = await fetch(
           `/api/question/getQuestions?testId=${resultData.testId}`

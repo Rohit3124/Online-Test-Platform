@@ -21,7 +21,7 @@ const StudentDashSidebar = () => {
       const res = await fetch("/api/user/signout", {
         method: "POST",
       });
-      const data = await res.json();
+      await res.json();
       if (res.ok) {
         navigate("/sign-in");
         setCurrentUser(null);
