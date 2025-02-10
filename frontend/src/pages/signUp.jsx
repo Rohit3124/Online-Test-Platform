@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { currentUserContext } from "../context/userContext";
+import OAuth from "../components/OAuth";
 
 const schema = Joi.object({
   username: Joi.string().min(3).max(255).required().empty("").messages({
@@ -125,6 +126,7 @@ const SignUp = () => {
                 "Sign Up"
               )}
             </Button>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
             <span>Have an account?</span>

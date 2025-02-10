@@ -83,7 +83,7 @@ const Question = ({ openQuestionModal, setOpenQuestionModal, testId }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(questionData),
       });
-      const responseData = await res.json();
+      await res.json();
       if (!res.ok) {
         return alert("Something went wrong");
       }

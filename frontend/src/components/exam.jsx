@@ -135,9 +135,9 @@ const Exam = () => {
     }
   };
   return (
-    <div className="w-full">
+    <div className="w-full ml-3">
       <div className="py-3">
-        <Button className="mx-auto" onClick={() => setOpenTestModal(true)}>
+        <Button className="" onClick={() => setOpenTestModal(true)}>
           Add Exam
         </Button>
 
@@ -303,7 +303,7 @@ const Exam = () => {
           testId={testId}
         />
       </div>
-      <div className="p-3">
+      <div className="">
         <div className="text-4xl mb-4">Exams</div>
         {exams.length > 0 ? (
           <div className="overflow-x-auto">
