@@ -1,4 +1,3 @@
-const config = require("config");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -9,7 +8,7 @@ const testRoutes = require("./routes/test.route");
 const questionRoutes = require("./routes/question.route");
 const resultRoutes = require("./routes/result.route");
 
-if (!config.get("jwtSecretKey")) {
+if (!process.env.JWT_SECRET_KEY) {
   throw new Error("FATAL ERROR: jwtSecretKey is not defined");
 }
 
@@ -22,7 +21,7 @@ app.use("/api/question", questionRoutes);
 app.use("/api/result", resultRoutes);
 
 mongoose
-  .connect("mongodb://localhost/online-test")
+  .connect(process.env.MONGODB_URL)
   .then(() => console.log("Connected to MongoDB..."))
   .catch((err) => console.error("Could not connect to MongoDB", err));
 
