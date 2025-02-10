@@ -122,12 +122,15 @@ const TestHeader = ({
         return alert("something went wrong");
       }
       console.log("Test submitted successfully!", result);
-      navigate("/student");
-      // Object.keys(localStorage).forEach((key) => {
-      //   if (key.startsWith("selectedOptions_")) {
-      //     localStorage.removeItem(key);
-      //   }
-      // });
+      navigate("/student?tab=exams");
+      Object.keys(localStorage).forEach((key) => {
+        if (
+          key.startsWith("selectedOptions_") ||
+          key.startsWith("questionStatus_")
+        ) {
+          localStorage.removeItem(key);
+        }
+      });
     } catch (error) {
       console.error("Error submitting test:", error);
       alert("Failed to submit test. Please try again.");
