@@ -63,7 +63,18 @@ router.post("/create", auth, async (req, res) => {
 
 router.get("/getExams", auth, async (req, res) => {
   try {
-    const exams = await Test.find();
+    const { testId } = req.query;
+
+    let exams;
+    if (testId) {
+      exams = await Test.findById(testId);
+      if (!exams) {
+        return res.status(404).json({ message: "Test not found." });
+      }
+    } else {
+      exams = await Test.find();
+    }
+
     return res.status(200).json(exams);
   } catch (error) {
     console.error("Error fetching exams:", error);

@@ -106,7 +106,6 @@ const TestHeader = ({
           {
             studentId,
             score,
-            rank: 0,
             answers: formattedAnswers,
           },
         ],

@@ -9,10 +9,7 @@ const studentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  rank: {
-    type: Number,
-    required: true,
-  },
+
   answers: [
     {
       questionId: {

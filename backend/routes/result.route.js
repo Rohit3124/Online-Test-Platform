@@ -14,7 +14,6 @@ function validate(req) {
         Joi.object({
           studentId: Joi.string().required(),
           score: Joi.number().required(),
-          rank: Joi.number().required(),
           answers: Joi.array()
             .items(
               Joi.object({
